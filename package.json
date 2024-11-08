@@ -1,0 +1,22 @@
+{
+  "name": "volontarion-ingegneria-del-software",
+  "version": "1.0.0",
+  "description": "progetto ingegneria del software",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/MarcoMattiuz/Volontarion-Ingegneria-del-software.git"
+  },
+  "author": "Marco Mattiuz, Guojie Zhan, Luo Maoxin Francesco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarcoMattiuz/Volontarion-Ingegneria-del-software/issues"
+  },
+  "homepage": "https://github.com/MarcoMattiuz/Volontarion-Ingegneria-del-software#readme",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}

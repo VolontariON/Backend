@@ -18,6 +18,8 @@
   "homepage": "https://github.com/MarcoMattiuz/Volontarion-Ingegneria-del-software#readme",
   "dependencies": {
     "express": "^4.21.1",
-    "mongoose": "^8.8.1"
+    "mongoose": "^8.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }

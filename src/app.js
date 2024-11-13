@@ -1,11 +1,10 @@
 import express from "express";
+import pinoHttp from "pino-http";
+const pino = pinoHttp();
 import swaggerUi from "swagger-ui-express";
-import userRoutes from "./routes/UserRoutes.js";
-import { getConfig } from "./utils/globals.js";
+import usersRoutes from "./routes/UsersRoutes.js";
 import fs from "fs";
 import path from "path";
-
-const config = await getConfig();
 const app = express();
 const swaggerDocument = JSON.parse(
   fs.readFileSync(path.resolve("./swagger.json"), "utf-8")
@@ -15,7 +14,8 @@ const swaggerDocument = JSON.parse(
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(pino);
 
 //routes
-app.use("/users", userRoutes);
+app.use("/", usersRoutes);
 export default app;

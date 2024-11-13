@@ -1,6 +1,8 @@
 import { getConfig } from "./utils/globals.js";
 import mongoose from "mongoose";
 import app from "./app.js";
+import pino from "pino";
+
 const config = await getConfig();
 export var db = null;
 const PORT = process.env.PORT || 3001;

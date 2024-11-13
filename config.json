@@ -1,4 +1,4 @@
 {
   "database_url": "localhost:27017",
-  "database_name": "test"
+  "database_name": "testing"
 }

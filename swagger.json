@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Sample API",
-    "description": "API di esempio per la gestione degli utenti",
+    "title": "API per Volontarion",
+    "description": "API per la gestione di tutti gli aspetti dell'app Volontarion",
     "version": "1.0.0"
   },
   "servers": [
@@ -12,26 +12,90 @@
     }
   ],
   "paths": {
-    "/getUsers": {
+    "/users/getVolontari": {
       "get": {
-        "summary": "Ottieni tutti gli utenti",
-        "description": "Restituisce una lista di tutti gli utenti presenti nel database",
+        "summary": "Ottieni tutti i volontari",
+        "description": "Restituisce una lista di tutti i volontari presenti nel database",
         "responses": {
           "200": {
-            "description": "Lista di utenti",
+            "description": "OK, Lista di volontari",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/Volontario"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Errore interno del server"
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/users/registrazioneVolontario": {
+      "post": {
+        "summary": "Registra un nuovo volontario",
+        "description": "Permette di registrare un nuovo volontario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Volontario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Volontario registrato con successo"
+          },
+          "400": {
+            "description": "Errore nei dati forniti"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/users/loginVolontario": {
+      "post": {
+        "summary": "Login di un volontario",
+        "description": "Permette a un volontario di effettuare il login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "mario.rossi@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login effettuato con successo"
+          },
+          "401": {
+            "description": "Credenziali non valide"
+          },
+          "500": {
+            "description": "Errore del server"
           }
         }
       }
@@ -39,16 +103,50 @@
   },
   "components": {
     "schemas": {
-      "User": {
+      "Volontario": {
         "type": "object",
         "properties": {
-          "username": {
+          "name": {
             "type": "string",
-            "example": "utente123"
+            "example": "Mario"
+          },
+          "surname": {
+            "type": "string",
+            "example": "Rossi"
+          },
+          "email": {
+            "type": "string",
+            "example": "mario.rossi@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+393331234567"
+          },
+          "fiscalcode": {
+            "type": "string",
+            "example": "RSSMRA85M01H501Z"
           },
           "password": {
             "type": "string",
             "example": "password123"
+          },
+          "followedAssociations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["Associazione A", "Associazione B"]
+          },
+          "description": {
+            "type": "string",
+            "example": "Volontario appassionato di tecnologia e sostenibilità"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["Programmazione", "Gestione eventi"]
           }
         }
       }

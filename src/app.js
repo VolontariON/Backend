@@ -1,8 +1,7 @@
 import express from "express";
-import pinoHttp from "pino-http";
-const pino = pinoHttp();
 import swaggerUi from "swagger-ui-express";
 import usersRoutes from "./routes/UsersRoutes.js";
+import cookieParser from "cookie-parser";
 import fs from "fs";
 import path from "path";
 const app = express();
@@ -14,8 +13,8 @@ const swaggerDocument = JSON.parse(
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(pino);
+app.use(cookieParser());
 
 //routes
-app.use("/", usersRoutes);
+app.use("/users", usersRoutes); //volontari e associazioni
 export default app;

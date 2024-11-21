@@ -1,8 +1,14 @@
 import express from "express";
-import { getVolontari } from "../controllers/VolontarioController.js";
+import {
+  getVolontari,
+  registrazioneVolontario,
+  login,
+} from "../controllers/usersController.js";
+import { cookiejwtAuth } from "../middleware/cookiejwtAuth.js";
 const router = express.Router();
 
-router.get("/getVolontari", getVolontari);
-// router.post("/createUser", createUser);
+router.get("/getVolontari", cookiejwtAuth, getVolontari);
+router.post("/registrazioneVolontario", registrazioneVolontario);
+router.post("/login", login);
 
 export default router;

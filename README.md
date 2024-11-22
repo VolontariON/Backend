@@ -40,3 +40,19 @@ project-root/
 ├── package.json
 └── README.md
 ```
+
+### status codes:
+
+#### responses
+
+- **201**: ✅ OK | (se è una GET ritorna il contenuto richiesto)
+
+#### account related:
+
+- **604**: ⚠️ email already registered
+- **605**: ⚠️ email not found
+- **606**: ⚠️ wrong password
+
+#### Server related:
+
+- **500**: ❌ server error

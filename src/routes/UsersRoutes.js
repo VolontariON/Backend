@@ -3,6 +3,7 @@ import {
   getVolontari,
   registrazioneVolontario,
   login,
+  modifyProfilePicture,
 } from "../controllers/usersController.js";
 import { cookiejwtAuth } from "../middleware/cookiejwtAuth.js";
 const router = express.Router();
@@ -10,5 +11,6 @@ const router = express.Router();
 router.get("/getVolontari", cookiejwtAuth, getVolontari);
 router.post("/registrazioneVolontario", registrazioneVolontario);
 router.post("/login", login);
+router.post("/modifyProfilePicture", cookiejwtAuth, modifyProfilePicture);
 
 export default router;

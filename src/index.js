@@ -8,7 +8,14 @@ export var db = null;
 const PORT = process.env.PORT || 3001;
 
 // Connect to the database
-mongoose.connect(`mongodb://${config.database_url}/${config.database_name}`);
+try {
+  mongoose.connect(`mongodb://${config.database_url}/${config.database_name}`);
+  logger.info(
+    `connected to mongoDB on mongodb://${config.database_url}/${config.database_name}`
+  );
+} catch (err) {
+  logger.fatal(err);
+}
 
 // Start the server
 app.listen(PORT, () => {

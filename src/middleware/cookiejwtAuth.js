@@ -7,7 +7,7 @@ export const cookiejwtAuth = (req, res, next) => {
 
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);
-    req.volontario = user;
+    req.jwtuser = user;
     next();
   } catch (err) {
     req.clearCookie("token");

@@ -18,7 +18,7 @@
         "description": "Restituisce una lista di tutti i volontari presenti nel database",
         "responses": {
           "200": {
-            "description": "OK, Lista di volontari",
+            "description": "Lista di volontari",
             "content": {
               "application/json": {
                 "schema": {
@@ -88,7 +88,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Login effettuato con successo"
           },
           "401": {

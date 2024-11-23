@@ -26,7 +26,7 @@ export const registrazioneVolontario = async (req, res) => {
     const query = Volontario.where({ email: req.body.email });
     const user = await query.findOne();
     if (user) {
-      res.status(605).json({ error: "email già registrata" });
+      res.status(605).json({ error: "email already registered" });
       logger.error("email già registrata status code: " + res.statusCode);
     }
 
@@ -46,19 +46,24 @@ export const login = async (req, res) => {
   logger.info(req.body);
   const { email, password } = req.body;
   const queryVol = Volontario.where({ email: email });
-  const userVol = await queryVol.findOne();
-  const queryAss = Associazione.where({ email: email });
-  const userAss = await queryAss.findOne();
-  let user = null;
-  if (userVol != null) {
-    user = userVol;
-  } else if (userAss != null) {
-    user = userAss;
-  } else {
+  const user = await queryVol.findOne();
+  console.log(user);
+  // const queryAss = Associazione.where({ email: email });
+  // const userAss = await queryAss.findOne();
+  // let user = null;
+  // if (userVol != null) {
+  //   user = userVol;
+  // } else if (userAss != null) {
+  //   user = userAss;
+  // } else {
+  //   res.status(604).json({ error: "email not found" });
+  //   logger.error("email not found: " + res.status);
+  // }
+
+  if (!user) {
     res.status(604).json({ error: "email not found" });
     logger.error("email not found: " + res.status);
   }
-
   if (password != user.password) {
     res.status(606).json({ error: "Wrong password" });
     logger.error("password is wrong: " + res.status);
@@ -86,11 +91,15 @@ export const login = async (req, res) => {
 
 export const modifyProfilePicture = async (req, res) => {
   try {
-    const { pimage } = req.body;
+    const { image } = req.body;
     const jwtuserid = req.jwtuser._id;
     const user = await Volontario.findById(jwtuserid);
+<<<<<<< HEAD
     logger.info("image"+pimage);
     user.profilePicture = pimage;
+=======
+    user.profilePicture = image;
+>>>>>>> a7a132e160dc88da05492fab082d1838e3527f76
     await user.save();
     res.status(201).json({ response: "OK" });
     logger.info("image loaded: " + res.statusCode);

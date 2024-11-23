@@ -75,11 +75,12 @@ export const login = async (req, res) => {
      */
     const userData = user.toObject();
     delete userData.password;
+    logger.info(userData);
     try {
       const token = jwt.sign(userData, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
-      res.cookie("token", token, { httpOnly: true });
+      res.cookie("token", token, { httpOnly: false});
     } catch (err) {
       console.log(err);
     }
@@ -93,7 +94,12 @@ export const modifyProfilePicture = async (req, res) => {
     const { image } = req.body;
     const jwtuserid = req.jwtuser._id;
     const user = await Volontario.findById(jwtuserid);
+<<<<<<< HEAD
+    logger.info("image"+pimage);
+    user.profilePicture = pimage;
+=======
     user.profilePicture = image;
+>>>>>>> a7a132e160dc88da05492fab082d1838e3527f76
     await user.save();
     res.status(201).json({ response: "OK" });
     logger.info("image loaded: " + res.statusCode);
@@ -102,6 +108,17 @@ export const modifyProfilePicture = async (req, res) => {
     logger.error(err);
   }
 };
+
+export const checkLoggedIn = async (req, res) => {
+  try {
+    res.status(201).json({ response: "OK" });
+  } catch (err) {
+    logger.error(err);
+  }
+};
+
+
+
 
 //TODO: eliminazione account
 

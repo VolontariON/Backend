@@ -55,4 +55,5 @@ project-root/
 
 #### Server related:
 
+- **401**: ❌ Authentication token is missing
 - **500**: ❌ server error

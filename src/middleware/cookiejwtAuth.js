@@ -4,13 +4,17 @@ import "dotenv/config";
 
 export const cookiejwtAuth = (req, res, next) => {
   const token = req.cookies.token;
+  logger.info(req.cookies);
+  if (!token) {
+    return res.status(401).json({ error: "Authentication token is missing" });
+  }
 
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.jwtuser = user;
     next();
   } catch (err) {
-    req.clearCookie("token");
+    //req.clearCookie("token");
     logger.error(err);
   }
 };

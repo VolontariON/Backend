@@ -19,6 +19,7 @@ export const checkLoggedIn = async (req, res) => {
   try {
     res.status(201).json({ response: "OK" });
   } catch (err) {
+    res.status(500).json({ error: "server error" });
     logger.error(err);
   }
 };

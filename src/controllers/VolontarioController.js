@@ -6,8 +6,6 @@ import "dotenv/config";
 // ritorna tutti i volontari
 export const getVolontari = async (req, res) => {
   logger.info("getVolontari with status code: " + res.statusCode);
-  // let volontario = await Volontario.find({});
-  // console.log(volontario);
   Volontario.find({})
     .then(function (users) {
       res.status(201).json(users);
@@ -39,6 +37,7 @@ export const registrazioneVolontario = async (req, res) => {
     if (user) {
       res.status(605).json({ error: "email already registered" });
       logger.error("email già registrata status code: " + res.statusCode);
+      return;
     }
 
     const volontario = new Volontario(req.body);
@@ -63,26 +62,36 @@ export const login = async (req, res) => {
     if (!user) {
       res.status(604).json({ error: "email not found" });
       logger.error("email not found: " + res.status);
+      return;
     }
-    if (password != user.password) {
-      res.status(606).json({ error: "Wrong password" });
-      logger.error("password is wrong: " + res.status);
-    } else {
-      // OK -> sign jwt
-      const userData = user.toObject();
-      delete userData.password;
-      logger.info(userData);
-      try {
-        const token = jwt.sign(userData, process.env.JWT_SECRET, {
-          expiresIn: "1h",
-        });
-        res.cookie("token", token, { httpOnly: true });
-      } catch (err) {
-        console.log(err);
+
+    user.comparePassword(password, (err, isMatch) => {
+      if (err) {
+        res.status(500).json({ error: "server error" });
+        logger.error("Errore durante il confronto delle password:", err);
+        return;
       }
-      res.status(201).json({ response: "OK" });
-      logger.info("login with status code: " + res.statusCode);
-    }
+
+      if (isMatch) {
+        // OK -> sign jwt
+        const userData = user.toObject();
+        delete userData.password;
+        logger.info(userData);
+        try {
+          const token = jwt.sign(userData, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+          });
+          res.cookie("token", token, { httpOnly: true });
+        } catch (err) {
+          console.log(err);
+        }
+        res.status(201).json({ response: "OK" });
+        logger.info("login with status code: " + res.statusCode);
+      } else {
+        res.status(606).json({ error: "Wrong password" });
+        logger.error("login with status code: " + res.statusCode);
+      }
+    });
   } catch (err) {
     res.status(500).json({ error: "server error" });
     logger.error(err);

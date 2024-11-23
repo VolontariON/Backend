@@ -10,36 +10,16 @@ git clone git@github.com:MarcoMattiuz/Volontarion-Ingegneria-del-software.git
 npm install
 ```
 
-### run
+### run dev server
 
 ```
-npm start
+npm run dev
 ```
 
-### Project structure
+### API docs
 
-```
-project-root/
-├── src/
-│ ├── controllers/
-│ │ ├── ...
-│ ├── models/
-│ │ ├── ...
-│ ├── routes/
-│ │ ├── ...
-│ ├── middlewares/
-│ │ └── ...
-│ ├── config/
-│ │ └── ...
-│ ├── utils/
-│ │ └── ...
-│ ├── app.js
-│ └── index.js
-├── ...
-├── .env
-├── package.json
-└── README.md
-```
+- start the server
+- go to **http//:url:port/api-docs**
 
 ### status codes:
 
@@ -57,3 +37,28 @@ project-root/
 
 - **401**: ❌ Authentication token is missing
 - **500**: ❌ server error
+
+### Project structure
+
+```
+project-root/
+├── src/
+│ ├── controllers/
+│ │ └── ...
+│ ├── models/
+│ │ └── ...
+│ ├── routes/
+│ │ └── ...
+│ ├── middlewares/
+│ │ └── ...
+│ ├── utils/
+│ │ └── ...
+│ ├── app.js
+│ └── index.js
+├── ...
+├── .env
+├── config.json
+├── .gitignore
+├── package.json
+└── README.md
+```

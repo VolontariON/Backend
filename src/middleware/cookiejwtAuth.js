@@ -10,7 +10,7 @@ export const cookiejwtAuth = (req, res, next) => {
     req.jwtuser = user;
     next();
   } catch (err) {
-    req.clearCookie("token");
+    res.clearCookie("token");
     logger.error(err);
   }
 };

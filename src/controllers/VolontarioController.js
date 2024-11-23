@@ -1,5 +1,4 @@
 import Volontario from "../models/VolontarioModel.js";
-import Associazione from "../models/AssociazioneModel.js";
 import logger from "../utils/logger.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
@@ -17,6 +16,18 @@ export const getVolontari = async (req, res) => {
       res.status(500).json({ error: "server error" });
       logger.error(err);
     });
+};
+
+export const getCurrentVolontario = async (req, res) => {
+  try {
+    const jwtuserid = req.jwtuser._id;
+    const user = await Volontario.findById(jwtuserid);
+    res.status(201).json(user);
+    logger.info("getcurrentvolontario: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
 };
 
 // crea nuovo volontario
@@ -44,48 +55,37 @@ export const registrazioneVolontario = async (req, res) => {
 // login cerco tra volontari o associazioni
 export const login = async (req, res) => {
   logger.info(req.body);
-  const { email, password } = req.body;
-  const queryVol = Volontario.where({ email: email });
-  const user = await queryVol.findOne();
-  console.log(user);
-  // const queryAss = Associazione.where({ email: email });
-  // const userAss = await queryAss.findOne();
-  // let user = null;
-  // if (userVol != null) {
-  //   user = userVol;
-  // } else if (userAss != null) {
-  //   user = userAss;
-  // } else {
-  //   res.status(604).json({ error: "email not found" });
-  //   logger.error("email not found: " + res.status);
-  // }
-
-  if (!user) {
-    res.status(604).json({ error: "email not found" });
-    logger.error("email not found: " + res.status);
-  }
-  if (password != user.password) {
-    res.status(606).json({ error: "Wrong password" });
-    logger.error("password is wrong: " + res.status);
-  } else {
-    /**
-     *
-     * OK,
-     * -> sign JWT
-     */
-    const userData = user.toObject();
-    delete userData.password;
-    logger.info(userData);
-    try {
-      const token = jwt.sign(userData, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      });
-      res.cookie("token", token, { httpOnly: false });
-    } catch (err) {
-      console.log(err);
+  try {
+    const { email, password } = req.body;
+    const queryVol = Volontario.where({ email: email });
+    const user = await queryVol.findOne();
+    console.log(user);
+    if (!user) {
+      res.status(604).json({ error: "email not found" });
+      logger.error("email not found: " + res.status);
     }
-    res.status(201).json({ response: "OK" });
-    logger.info("login with status code: " + res.statusCode);
+    if (password != user.password) {
+      res.status(606).json({ error: "Wrong password" });
+      logger.error("password is wrong: " + res.status);
+    } else {
+      // OK -> sign jwt
+      const userData = user.toObject();
+      delete userData.password;
+      logger.info(userData);
+      try {
+        const token = jwt.sign(userData, process.env.JWT_SECRET, {
+          expiresIn: "1h",
+        });
+        res.cookie("token", token, { httpOnly: true });
+      } catch (err) {
+        console.log(err);
+      }
+      res.status(201).json({ response: "OK" });
+      logger.info("login with status code: " + res.statusCode);
+    }
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
   }
 };
 
@@ -104,14 +104,7 @@ export const modifyProfilePicture = async (req, res) => {
   }
 };
 
-export const checkLoggedIn = async (req, res) => {
-  try {
-    res.status(201).json({ response: "OK" });
-  } catch (err) {
-    logger.error(err);
-  }
-};
-
+// TODO: crypt password (hash)
 //TODO: eliminazione account
 
 // TODO: modfica dati volontario dato un codice fiscale

@@ -4,20 +4,18 @@ import {
   registrazioneVolontario,
   login,
   modifyProfilePicture,
-  checkLoggedIn,
+  getCurrentVolontario,
+} from "../controllers/VolontarioController.js";
 
-} from "../controllers/usersController.js";
+import { logout } from "../controllers/UtilsController.js";
 import { cookiejwtAuth } from "../middleware/cookiejwtAuth.js";
 const router = express.Router();
 
-router.get("/getVolontari", cookiejwtAuth, getVolontari);
-router.get("/checkLoggedIn", cookiejwtAuth, checkLoggedIn);
 router.post("/registrazioneVolontario", registrazioneVolontario);
 router.post("/login", login);
+router.get("/getVolontari", cookiejwtAuth, getVolontari);
+router.get("/getCurrentVolontario", cookiejwtAuth, getCurrentVolontario);
 router.post("/modifyProfilePicture", cookiejwtAuth, modifyProfilePicture);
-
-
-
-
+router.get("/logout", cookiejwtAuth, logout);
 
 export default router;

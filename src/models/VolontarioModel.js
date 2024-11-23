@@ -5,7 +5,7 @@ const collection = "Volunteers";
 const VolontarioSchema = new mongoose.Schema({
   name: { type: String, required: true },
   surname: { type: String, required: true },
-  age: { type: Number, min: 0, max: 200, required: true },
+  age: { type: Number, min: 0, max: 200, required: false },
   email: { type: String, required: true },
   phone: { type: String, required: false },
   fiscalcode: { type: String, required: true },

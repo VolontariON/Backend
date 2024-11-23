@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
-import Associazione from "./AssociazioneModel.js";
-import Evento from "./EventiModel.js";
-const collection = "volunteers";
+
+const collection = "Volunteers";
 
 const VolontarioSchema = new mongoose.Schema({
-  // _id: { type: String, required: true },
   name: { type: String, required: true },
   surname: { type: String, required: true },
   age: { type: Number, min: 0, max: 200, required: true },
@@ -12,8 +10,17 @@ const VolontarioSchema = new mongoose.Schema({
   phone: { type: String, required: false },
   fiscalcode: { type: String, required: true },
   password: { type: String, required: true },
-  followedAssociations: { type: [Associazione.Schema], required: false },
-  subscribedEvents: { type: [Evento.Schema], required: false },
+
+  followedAssociations: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Associations",
+      required: false,
+    },
+  ],
+  subscribedEvents: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Events", required: false },
+  ],
   description: { type: String, required: false },
   skills: { type: [String], required: false },
   profilePicture: { type: String, required: false },

@@ -12,7 +12,6 @@ const swaggerDocument = JSON.parse(
 
 // setup
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(express.json());
 app.use(cookieParser());
 app.use(express.json({ limit: "16mb" }));
 app.use(express.urlencoded({ limit: "16mb", extended: true }));

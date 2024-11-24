@@ -2,7 +2,9 @@ import mailjet from "node-mailjet";
 import "dotenv/config";
 import logger from "../utils/logger.js";
 import fs from "fs/promises";
+import { getConfig } from "../utils/globals.js";
 
+const config = await getConfig();
 const TEMPLATES_PATH = "src/templates";
 const mailjetClient = mailjet.apiConnect(
   process.env.MAILJET_API_KEY_PUBLIC,
@@ -20,7 +22,7 @@ export const registrationEmail = async (email, name, req, res) => {
       Messages: [
         {
           From: {
-            Email: "marccs35@gmail.com",
+            Email: config.sender_email,
             Name: "Volontarion - email",
           },
           To: [

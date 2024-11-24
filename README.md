@@ -10,6 +10,14 @@ git clone git@github.com:MarcoMattiuz/Volontarion-Ingegneria-del-software.git
 npm install
 ```
 
+### SET .env
+
+```
+JWT_SECRET = "your_jwt_secret"
+MAILJET_API_KEY_PUBLIC = "your_mailjet_API_KEY"
+MAILJET_SECRET_KEY = "your_mailjet_SECRET_KEY"
+```
+
 ### run dev server
 
 ```

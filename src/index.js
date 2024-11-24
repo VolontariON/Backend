@@ -7,9 +7,16 @@ const config = await getConfig();
 export var db = null;
 const PORT = process.env.PORT || 3001;
 
-// Connect to the database
 try {
-  mongoose.connect(`mongodb://${config.database_url}/${config.database_name}`);
+  let intervalId;
+  intervalId = setInterval(() => {
+    logger.warn("Attempting to connect to MongoDB...");
+  }, 1000);
+  await mongoose.connect(
+    `mongodb://${config.database_url}/${config.database_name}`
+  );
+
+  clearInterval(intervalId);
   logger.info(
     `connected to mongoDB on mongodb://${config.database_url}/${config.database_name}`
   );

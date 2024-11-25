@@ -14,6 +14,7 @@ export const cookiejwtAuth = (req, res, next) => {
     next();
   } catch (err) {
     res.clearCookie("token");
+    res.status(501).json({ error: "jwtcookie expired" });
     logger.error(err);
   }
 };

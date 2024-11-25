@@ -21,8 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 // setup
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(cookieParser());
-app.use(express.json({ limit: "25mb" }));
-app.use(express.urlencoded({ limit: "25mb", extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 //routes
 app.use("/users", usersRoutes); //volontari e associazioni

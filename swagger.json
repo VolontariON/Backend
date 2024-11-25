@@ -17,7 +17,7 @@
         "summary": "Ottieni tutti i volontari",
         "description": "Restituisce una lista di tutti i volontari presenti nel database",
         "responses": {
-          "200": {
+          "201": {
             "description": "Lista di volontari",
             "content": {
               "application/json": {
@@ -31,7 +31,30 @@
             }
           },
           "500": {
-            "description": "Errore del server"
+            "description": "server error"
+          }
+        }
+      }
+    },
+    "/users/getCurrentVolontario": {
+      "get": {
+        "summary": "Ottieni il volontario loggato",
+        "description": "restituisce i dati del volontario attualmente loggato, meno la password",
+        "responses": {
+          "201": {
+            "description": "il volontario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Volontario"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error"
           }
         }
       }
@@ -108,48 +131,77 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "Mario"
+            "example": "Mario",
+            "required": true
           },
           "surname": {
             "type": "string",
-            "example": "Rossi"
+            "example": "Rossi",
+            "required": true
+          },
+          "age": {
+            "type": "number",
+            "example": "mario.rossi@example.com",
+            "required": true
           },
           "email": {
             "type": "string",
-            "example": "mario.rossi@example.com"
+            "example": "mario.rossi@example.com",
+            "required": true
           },
           "phone": {
             "type": "string",
-            "example": "+393331234567"
+            "example": "+393331234567",
+            "required": false
           },
           "fiscalcode": {
             "type": "string",
-            "example": "RSSMRA85M01H501Z"
+            "example": "RSSMRA85M01H501Z",
+            "required": true
           },
           "password": {
             "type": "string",
-            "example": "password123"
+            "example": "password123",
+            "required": true
           },
           "followedAssociations": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/Associazione"
             },
-            "example": ["Associazione A", "Associazione B"]
+            "example": ["{Associazione Object1}", "{Associazione Object2}"],
+            "required": false
+          },
+          "subscribedEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Evento"
+            },
+            "example": ["{Evento Object1}", "{Evento Object2}"],
+            "required": false
           },
           "description": {
             "type": "string",
-            "example": "Volontario appassionato di tecnologia e sostenibilità"
+            "example": "Volontario appassionato di tecnologia e sostenibilità",
+            "required": false
           },
           "skills": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "example": ["Programmazione", "Gestione eventi"]
+            "example": ["Programmazione", "Gestione eventi"],
+            "required": false
+          },
+          "profilePicture": {
+            "type": "string",
+            "description": "encoded in Base64",
+            "required": false
           }
         }
-      }
+      },
+      "Associazione": {},
+      "Evento": {}
     }
   }
 }

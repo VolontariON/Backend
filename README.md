@@ -10,7 +10,7 @@ git clone git@github.com:MarcoMattiuz/Volontarion-Ingegneria-del-software.git
 npm install
 ```
 
-### SET .env
+### SET .env file
 
 ```
 JWT_SECRET = "your_jwt_secret"
@@ -21,7 +21,8 @@ MAILJET_SECRET_KEY = "your_mailjet_SECRET_KEY"
 ### run dev server
 
 ```
-npm run dev
+npm run start (runs with node)
+npm run dev (runs with nodemon)
 ```
 
 ### API docs

@@ -5,6 +5,7 @@ import "dotenv/config";
 
 // ritorna tutti i volontari
 export const getVolontari = async (req, res) => {
+  // *swagger
   logger.info("getVolontari with status code: " + res.statusCode);
   Volontario.find({})
     .then(function (users) {
@@ -17,9 +18,12 @@ export const getVolontari = async (req, res) => {
 };
 
 export const getCurrentVolontario = async (req, res) => {
+  // *SWAGGER
   try {
     const jwtuserid = req.jwtuser._id;
     const user = await Volontario.findById(jwtuserid);
+    const userData = user.toObject();
+    delete userData.password;
     res.status(201).json(user);
     logger.info("getcurrentvolontario: " + res.statusCode);
   } catch (err) {
@@ -30,6 +34,7 @@ export const getCurrentVolontario = async (req, res) => {
 
 // crea nuovo volontario
 export const registrazioneVolontario = async (req, res) => {
+  // TODO: SWAGGER
   logger.info(req.body);
   try {
     const query = Volontario.where({ email: req.body.email });
@@ -51,8 +56,8 @@ export const registrazioneVolontario = async (req, res) => {
   }
 };
 
-// login cerco tra volontari o associazioni
 export const login = async (req, res) => {
+  // TODO: SWAGGER
   logger.info(req.body);
   try {
     const { email, password } = req.body;
@@ -83,7 +88,7 @@ export const login = async (req, res) => {
           });
           res.cookie("token", token, { httpOnly: true });
         } catch (err) {
-          console.log(err);
+          logger.error(err);
         }
         res.status(201).json({ response: "OK" });
         logger.info("login with status code: " + res.statusCode);
@@ -99,6 +104,7 @@ export const login = async (req, res) => {
 };
 
 export const modifyProfilePicture = async (req, res) => {
+  // TODO: SWAGGER
   try {
     const { image } = req.body;
     const jwtuserid = req.jwtuser._id;
@@ -113,7 +119,38 @@ export const modifyProfilePicture = async (req, res) => {
   }
 };
 
-// TODO: crypt password (hash)
+export const modifyDescription = async (req, res) => {
+  try {
+    const { description } = req.body;
+    //get current user
+    const jwtuserid = req.jwtuser._id;
+    const user = await Volontario.findById(jwtuserid);
+    user.description = description;
+    await user.save();
+    res.status(201).json({ response: "OK" });
+    logger.info("user descriptin modified: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
+export const modifySkills = async (req, res) => {
+  try {
+    const { skills } = req.body;
+    //get current user
+    const jwtuserid = req.jwtuser._id;
+    const user = await Volontario.findById(jwtuserid);
+    user.skills = skills;
+    await user.save();
+    res.status(201).json({ response: "OK" });
+    logger.info("user skills modified: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
 //TODO: eliminazione account
 
 // TODO: modfica dati volontario dato un codice fiscale

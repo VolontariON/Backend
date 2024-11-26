@@ -151,6 +151,19 @@ export const modifySkills = async (req, res) => {
   }
 };
 
+export const getprofilePicture = async (req, res) => {
+  try {
+    //get current user
+    const jwtuserid = req.jwtuser._id;
+    const user = await Volontario.findById(jwtuserid);
+    res.status(201).json(user.profilePicture);
+    logger.info("get profilePicture: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
 //TODO: eliminazione account
 
 // TODO: modfica dati volontario dato un codice fiscale

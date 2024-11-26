@@ -7,6 +7,7 @@ import {
   getCurrentVolontario,
   modifyDescription,
   modifySkills,
+  getprofilePicture,
 } from "../controllers/VolontarioController.js";
 
 import { logout } from "../controllers/UtilsController.js";
@@ -27,5 +28,6 @@ router.put(
 router.put("/modifyDescription", cookiejwtAuth, modifyDescription);
 router.put("/modifySkills", cookiejwtAuth, modifySkills);
 router.get("/logout", cookiejwtAuth, logout);
+router.get("/getProfilePicture", cookiejwtAuth, getprofilePicture);
 
 export default router;

@@ -8,6 +8,7 @@ import {
   modifyDescription,
   modifySkills,
   getprofilePicture,
+  deleteAccount,
 } from "../controllers/VolontarioController.js";
 
 import { logout } from "../controllers/UtilsController.js";
@@ -27,6 +28,7 @@ router.put(
 );
 router.put("/modifyDescription", cookiejwtAuth, modifyDescription);
 router.put("/modifySkills", cookiejwtAuth, modifySkills);
+router.delete("/deleteAccount", cookiejwtAuth, deleteAccount);
 router.get("/logout", cookiejwtAuth, logout);
 router.get("/getProfilePicture", cookiejwtAuth, getprofilePicture);
 

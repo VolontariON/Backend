@@ -12,16 +12,8 @@ const AssociazioneSchema = new mongoose.Schema({
   subscriptionIter: { type: String, required: false },
   objectives: { type: String, required: false },
   profilePicture: { type: String, required: false },
-  createdEvents: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "Events", required: false },
-  ],
-  subscribedVolunteers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Volunteers",
-      required: false,
-    },
-  ],
+  createdEvents: { type: [String], required: false },
+  subscribedVolunteers: { type: [String], required: false },
 });
 
 AssociazioneSchema.pre("save", function (next) {

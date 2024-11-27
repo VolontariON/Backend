@@ -46,6 +46,7 @@ npm run dev (runs with nodemon)
 
 - **401**: ❌ Authentication token is missing
 - **500**: ❌ server error
+- **501**: ❌ token expired
 
 ### Project structure
 

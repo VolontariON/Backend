@@ -2,6 +2,7 @@ import Volontario from "../models/VolontarioModel.js";
 import logger from "../utils/logger.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import { response } from "express";
 
 // ritorna tutti i volontari
 export const getVolontari = async (req, res) => {
@@ -46,7 +47,6 @@ export const registrazioneVolontario = async (req, res) => {
     }
 
     const volontario = new Volontario(req.body);
-
     await volontario.save();
     res.status(201).json({ response: "OK" });
     logger.info("registrazioneVolontario with status code: " + res.statusCode);
@@ -63,7 +63,6 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const queryVol = Volontario.where({ email: email });
     const user = await queryVol.findOne();
-    console.log(user);
     if (!user) {
       res.status(604).json({ error: "email not found" });
       logger.error("email not found: " + res.status);
@@ -81,6 +80,7 @@ export const login = async (req, res) => {
         // OK -> sign jwt
         const userData = user.toObject();
         delete userData.password;
+        delete userData.profilePicture;
         logger.info(userData);
         try {
           const token = jwt.sign(userData, process.env.JWT_SECRET, {
@@ -164,7 +164,21 @@ export const getprofilePicture = async (req, res) => {
   }
 };
 
-//TODO: eliminazione account
+export const deleteAccount = async (req, res) => {
+  try {
+    //get current user
+    const jwtuserid = req.jwtuser._id;
+    const user = await Volontario.findById(jwtuserid);
+    let email = user.email;
+    await Volontario.deleteOne({ _id: jwtuserid });
+
+    res.status(201).json({ response: "OK" });
+    logger.info("deleted account: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
 
 // TODO: modfica dati volontario dato un codice fiscale
 // mail

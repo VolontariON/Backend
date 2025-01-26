@@ -45,7 +45,6 @@ export const registrazioneVolontario = async (req, res) => {
       logger.error("email già registrata status code: " + res.statusCode);
       return;
     }
-
     const volontario = new Volontario(req.body);
     await volontario.save();
     res.status(201).json({ response: "OK" });
@@ -53,6 +52,7 @@ export const registrazioneVolontario = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "server error" });
     logger.error("registrazioneVolontario with status code: " + res.statusCode);
+    logger.error(error);
   }
 };
 

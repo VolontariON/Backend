@@ -1,6 +1,7 @@
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import usersRoutes from "./routes/UsersRoutes.js";
+import associazioniRoutes from "./routes/AssociazioniRoutes.js";
 import UtilsRoutes from "./routes/UtilsRouter.js";
 import cookieParser from "cookie-parser";
 import fs from "fs";
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ limit: "16mb", extended: true }));
 
 //routes
 app.use("/users", usersRoutes); //volontari e associazioni
+app.use("/associazioni", associazioniRoutes);
 app.use("/", UtilsRoutes);
 
 export default app;

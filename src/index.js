@@ -1,9 +1,7 @@
-import { getConfig } from "./utils/globals.js";
 import mongoose from "mongoose";
 import app from "./app.js";
 import logger from "./utils/logger.js";
-
-const config = await getConfig();
+import "dotenv/config";
 const PORT = process.env.PORT || 3001;
 var server = null;
 const mongoConnect = async () => {
@@ -12,12 +10,12 @@ const mongoConnect = async () => {
     logger.warn("Attempting to connect to MongoDB...");
   }, 1000);
   await mongoose.connect(
-    `mongodb://${config.database_url}/${config.database_name}`
+    `mongodb://${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}`
   );
 
   clearInterval(intervalId);
   logger.info(
-    `connected to mongoDB on mongodb://${config.database_url}/${config.database_name}`
+    `connected to mongoDB on mongodb://${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}`
   );
 };
 

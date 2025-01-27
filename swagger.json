@@ -132,57 +132,70 @@
           "name": {
             "type": "string",
             "example": "Mario",
+            "description": "Il nome del volontario",
             "required": true
           },
           "surname": {
             "type": "string",
             "example": "Rossi",
+            "description": "Il cognome del volontario",
             "required": true
           },
           "age": {
-            "type": "number",
-            "example": "mario.rossi@example.com",
+            "type": "integer",
+            "example": 30,
+            "description": "Età del volontario (tra 0 e 200 anni)",
+            "minimum": 0,
+            "maximum": 200,
             "required": true
           },
           "email": {
             "type": "string",
+            "format": "email",
             "example": "mario.rossi@example.com",
+            "description": "Email unica del volontario",
             "required": true
           },
           "phone": {
             "type": "string",
             "example": "+393331234567",
+            "description": "Numero di telefono del volontario",
             "required": false
           },
           "fiscalcode": {
             "type": "string",
             "example": "RSSMRA85M01H501Z",
+            "description": "Codice fiscale del volontario",
             "required": true
           },
           "password": {
             "type": "string",
             "example": "password123",
+            "description": "Password del volontario (salvata in forma hashata)",
             "required": true
           },
           "followedAssociations": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Associazione"
+              "type": "string"
             },
-            "example": ["{Associazione Object1}", "{Associazione Object2}"],
+            "example": ["Associazione1", "Associazione2"],
+            "description": "Lista delle associazioni seguite dal volontario",
             "required": false
           },
           "subscribedEvents": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Evento"
+              "type": "string"
             },
-            "example": ["{Evento Object1}", "{Evento Object2}"],
+            "example": ["Evento1", "Evento2"],
+            "description": "Lista degli eventi a cui il volontario è iscritto",
             "required": false
           },
           "description": {
             "type": "string",
             "example": "Volontario appassionato di tecnologia e sostenibilità",
+            "description": "Breve descrizione del volontario",
             "required": false
           },
           "skills": {
@@ -191,17 +204,177 @@
               "type": "string"
             },
             "example": ["Programmazione", "Gestione eventi"],
+            "description": "Lista delle competenze del volontario",
             "required": false
           },
           "profilePicture": {
             "type": "string",
-            "description": "encoded in Base64",
+            "description": "Immagine del profilo codificata in Base64",
+            "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
             "required": false
           }
-        }
+        },
+        "required": [
+          "name",
+          "surname",
+          "age",
+          "email",
+          "fiscalcode",
+          "password"
+        ]
       },
-      "Associazione": {},
-      "Evento": {}
+      "Associazione": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Associazione Volontari Trento",
+            "description": "Il nome dell'associazione",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "info@volontaritn.it",
+            "description": "Email unica dell'associazione",
+            "required": true
+          },
+          "phone": {
+            "type": "string",
+            "example": "+390461123456",
+            "description": "Numero di telefono dell'associazione",
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "example": "securepassword123",
+            "description": "Password dell'associazione (salvata come hash)",
+            "required": true
+          },
+          "description": {
+            "type": "string",
+            "example": "Associazione dedicata alla protezione ambientale e al volontariato.",
+            "description": "Breve descrizione dell'associazione",
+            "required": false
+          },
+          "subscriptionIter": {
+            "type": "string",
+            "example": "Step-by-step guida all'iscrizione",
+            "description": "Descrizione del processo di iscrizione",
+            "required": false
+          },
+          "objectives": {
+            "type": "string",
+            "example": "Promuovere la sostenibilità ambientale e il volontariato attivo.",
+            "description": "Gli obiettivi principali dell'associazione",
+            "required": false
+          },
+          "profilePicture": {
+            "type": "string",
+            "description": "Immagine del profilo dell'associazione codificata in Base64",
+            "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
+            "required": false
+          },
+          "createdEvents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["_id Evento1", "_id Evento2"],
+            "description": "Lista degli ID degli eventi creati dall'associazione",
+            "required": false
+          },
+          "subscribedVolunteers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["_id Volontario1", "_id Volontario2"],
+            "description": "Lista degli ID dei volontari iscritti all'associazione",
+            "required": false
+          }
+        },
+        "required": ["name", "email", "phone", "password"]
+      },
+      "Evento": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Pulizia del Parco",
+            "description": "Titolo dell'evento",
+            "required": true
+          },
+          "hostAssociation": {
+            "type": "string",
+            "example": "Associazione Volontari Trento",
+            "description": "Nome o ID dell'associazione organizzatrice dell'evento",
+            "required": false
+          },
+          "startDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-12-10T10:00:00Z",
+            "description": "Data e ora di inizio dell'evento",
+            "required": true
+          },
+          "endDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-12-10T14:00:00Z",
+            "description": "Data e ora di fine dell'evento",
+            "required": true
+          },
+          "place": {
+            "type": "string",
+            "example": "Via Roma 123, Trento, Italia",
+            "description": "Luogo fisico dell'evento",
+            "required": true
+          },
+          "gmapsLink": {
+            "type": "string",
+            "example": "https://goo.gl/maps/xyz123",
+            "description": "Link a Google Maps per il luogo dell'evento",
+            "required": false
+          },
+          "description": {
+            "type": "string",
+            "example": "Un evento per ripulire il parco cittadino e sensibilizzare la popolazione.",
+            "description": "Descrizione dettagliata dell'evento",
+            "required": false
+          },
+          "subscribedVolunteers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["Volontario1", "Volontario2"],
+            "description": "Lista degli ID dei volontari iscritti all'evento",
+            "required": false
+          },
+          "maxParticipants": {
+            "type": "integer",
+            "example": 50,
+            "description": "Numero massimo di partecipanti consentiti",
+            "required": true
+          },
+          "status": {
+            "type": "string",
+            "enum": ["upcoming", "ongoing", "completed", "cancelled"],
+            "example": "upcoming",
+            "description": "Stato attuale dell'evento",
+            "required": true
+          }
+        },
+        "required": [
+          "name",
+          "startDateTime",
+          "endDateTime",
+          "place",
+          "maxParticipants",
+          "status"
+        ]
+      }
     }
   }
 }

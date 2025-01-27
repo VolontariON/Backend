@@ -14,11 +14,18 @@ import {
 import { logout } from "../controllers/UtilsController.js";
 import { cookiejwtAuth } from "../middleware/cookiejwtAuth.js";
 import { payloadSize } from "../middleware/payloadSize.js";
+import {
+  getAssociazioni,
+  getSubAssociazioni,
+} from "../controllers/AssociationsController.js";
 const router = express.Router();
 
 router.post("/registrazioneVolontario", registrazioneVolontario);
 router.post("/login", login);
 router.get("/getVolontari", cookiejwtAuth, getVolontari);
+router.get("/getAssociazioni", cookiejwtAuth, getAssociazioni);
+router.get("/getSubAssociazioni", cookiejwtAuth, getSubAssociazioni);
+
 router.get("/getCurrentVolontario", cookiejwtAuth, getCurrentVolontario);
 router.put(
   "/modifyProfilePicture",

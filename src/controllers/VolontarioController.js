@@ -2,7 +2,10 @@ import Volontario from "../models/VolontarioModel.js";
 import logger from "../utils/logger.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { response } from "express";
+import {
+  registrationEmail,
+  deleteAccountEmail,
+} from "./sendEmailsController.js";
 
 // ritorna tutti i volontari
 export const getVolontari = async (req, res) => {
@@ -10,7 +13,12 @@ export const getVolontari = async (req, res) => {
   logger.info("getVolontari with status code: " + res.statusCode);
   Volontario.find({})
     .then(function (users) {
-      res.status(201).json(users);
+      const usersWithoutPassword = users.map((user) => {
+        const userData = user.toObject();
+        delete userData.password;
+        return userData;
+      });
+      res.status(201).json(usersWithoutPassword);
     })
     .catch(function (err) {
       res.status(500).json({ error: "server error" });
@@ -48,6 +56,7 @@ export const registrazioneVolontario = async (req, res) => {
 
     const volontario = new Volontario(req.body);
     await volontario.save();
+    await registrationEmail(volontario.email, volontario.name, req, res);
     res.status(201).json({ response: "OK" });
     logger.info("registrazioneVolontario with status code: " + res.statusCode);
   } catch (error) {
@@ -170,8 +179,9 @@ export const deleteAccount = async (req, res) => {
     const jwtuserid = req.jwtuser._id;
     const user = await Volontario.findById(jwtuserid);
     let email = user.email;
+    let name = user.name;
     await Volontario.deleteOne({ _id: jwtuserid });
-
+    deleteAccountEmail(email, name, req, res);
     res.status(201).json({ response: "OK" });
     logger.info("deleted account: " + res.statusCode);
   } catch (err) {

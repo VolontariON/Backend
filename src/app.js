@@ -2,6 +2,7 @@ import express from "express";
 import swaggerUi from "swagger-ui-express";
 import usersRoutes from "./routes/UsersRoutes.js";
 import UtilsRoutes from "./routes/UtilsRouter.js";
+import eventsRoutes from "./routes/EventsRoutes.js";
 import cookieParser from "cookie-parser";
 import fs from "fs";
 import path from "path";
@@ -15,7 +16,6 @@ const swaggerDocument = JSON.parse(
 
 //allow cors
 app.use(cors({ credentials: true, origin: true }));
-//Middleware to parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
 
 // setup
@@ -26,6 +26,7 @@ app.use(express.urlencoded({ limit: "16mb", extended: true }));
 
 //routes
 app.use("/users", usersRoutes); //volontari e associazioni
+app.use("/events", eventsRoutes); //eventi
 app.use("/", UtilsRoutes);
 
 export default app;

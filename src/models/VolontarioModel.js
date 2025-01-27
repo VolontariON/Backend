@@ -9,7 +9,7 @@ const VolontarioSchema = new mongoose.Schema({
   age: { type: Number, min: 0, max: 200, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: false },
-  password: { type: String, required: true },
+  password: { type: String, required: true},
   followedAssociations: { type: [String], required: false },
   subscribedEvents: { type: [String], required: false },
   description: { type: String, required: false },

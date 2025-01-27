@@ -44,3 +44,18 @@ export const getAssociazioni = async (req, res) => {
       logger.error(err);
     });
 };
+
+
+export const getCurrentAssociazione = async (req, res) => {
+  // *SWAGGER
+  try {
+    const jwtuserid = req.jwtuser._id;
+    const associazione = await Associazione.findById(jwtuserid).select('-password');;
+    const associazioneData = associazione.toObject();
+    res.status(201).json(associazioneData);
+    logger.info("getCurrentAssociazione: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};

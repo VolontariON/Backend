@@ -1,7 +1,8 @@
 import express from "express";
 import {
     getAssociazioni,
-    registrazioneAssociazione
+    registrazioneAssociazione,
+    getCurrentAssociazione
 } from "../controllers/AssociazioneController.js";
 
 import { logout } from "../controllers/UtilsController.js";
@@ -10,6 +11,7 @@ import { payloadSize } from "../middleware/payloadSize.js";
 const router = express.Router();
 
 router.get("/getAssociazioni", getAssociazioni);
+router.get("/getCurrentAssociazione", cookiejwtAuth, getCurrentAssociazione);
 router.post("/registrazioneAssociazione", registrazioneAssociazione);
 
 

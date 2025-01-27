@@ -22,10 +22,9 @@ export const getCurrentVolontario = async (req, res) => {
   // *SWAGGER
   try {
     const jwtuserid = req.jwtuser._id;
-    const user = await Volontario.findById(jwtuserid);
+    const user = await Volontario.findById(jwtuserid).select("-password");
     const userData = user.toObject();
-    delete userData.password;
-    res.status(201).json(user);
+    res.status(201).json(userData);
     logger.info("getcurrentvolontario: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });

@@ -17,7 +17,7 @@ import { payloadSize } from "../middleware/payloadSize.js";
 import {
   getAssociazioni,
   getSubAssociazioni,
-} from "../controllers/AssociationsController.js";
+} from "../controllers/AssociazioneController.js";
 const router = express.Router();
 
 router.post("/registrazioneVolontario", registrazioneVolontario);

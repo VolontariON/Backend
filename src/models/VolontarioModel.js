@@ -13,6 +13,7 @@ const VolontarioSchema = new mongoose.Schema({
   followedAssociations: { type: [String], required: false },
   subscribedEvents: { type: [String], required: false },
   description: { type: String, required: false },
+  experience: { type: String, required: false },
   skills: { type: [String], required: false },
   profilePicture: { type: String, required: false },
 });

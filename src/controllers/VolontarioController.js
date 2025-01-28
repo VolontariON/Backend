@@ -30,6 +30,7 @@ export const getCurrentVolontario = async (req, res) => {
   // *SWAGGER
   try {
     const jwtuserid = req.jwtuser._id;
+    logger.info(jwtuserid);
     const user = await Volontario.findById(jwtuserid).select("-password");
     const userData = user.toObject();
     res.status(201).json(userData);
@@ -52,7 +53,7 @@ export const registrazioneVolontario = async (req, res) => {
       logger.error("email già registrata status code: " + res.statusCode);
       return;
     }
-    const volontario = new Volontario(req.body);
+    const volontario = new Volontario(req.body);  
     await volontario.save();
     await registrationEmail(volontario.email, volontario.name, req, res);
     res.status(201).json({ response: "OK" });

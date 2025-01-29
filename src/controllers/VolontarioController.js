@@ -190,6 +190,38 @@ export const deleteAccount = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  // *SWAGGER
+  try {
+    const jwtuserid = req.jwtuser._id;
+    const volontario = await Volontario.findById(jwtuserid);
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
+    volontario.comparePassword(password, async (err, isMatch) => {
+          if (err) {
+            res.status(500).json({ error: "server error" });
+            logger.error("Errore durante il confronto delle password:", err);
+            return;
+          }
+    
+          if (isMatch) {
+            volontario.password = newPassword;
+            await volontario.save();
+            res.status(201).json({ res: "OK" })
+          } else {
+            res.status(606).json({ error: "Wrong password" });
+            logger.error("login with status code: " + res.statusCode);
+          }
+        });
+
+    logger.info("changePassword: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
 // TODO: modfica dati volontario dato un codice fiscale
 // mail
 // phone

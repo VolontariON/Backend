@@ -101,13 +101,44 @@ export const getCurrentAssociazione = async (req, res) => {
   // *SWAGGER
   try {
     const jwtuserid = req.jwtuser._id;
-    logger.info("----------"+jwtuserid);
     const associazione = await Associazione.findById(jwtuserid).select(
-      "-password"
     );
-    logger.info(associazione);
+
     const associazioneData = associazione.toObject();
     res.status(201).json(associazioneData);
+    logger.info("getCurrentAssociazione: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
+export const changePassword = async (req, res) => {
+  // *SWAGGER
+  try {
+    const jwtuserid = req.jwtuser._id;
+    const associazione = await Associazione.findById(jwtuserid);
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
+
+    associazione.comparePassword(password, async (err, isMatch) => {
+          if (err) {
+            res.status(500).json({ error: "server error" });
+            logger.error("Errore durante il confronto delle password:", err);
+            return;
+          }
+    
+          if (isMatch) {
+            associazione.password = newPassword;
+            await associazione.save();
+            res.status(201).json({ res: "OK" })
+          } else {
+            res.status(606).json({ error: "Wrong password" });
+            logger.error("login with status code: " + res.statusCode);
+          }
+        });
+
     logger.info("getCurrentAssociazione: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });

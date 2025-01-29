@@ -16,6 +16,8 @@ const AssociazioneSchema = new mongoose.Schema({
   subscribedVolunteers: { type: [String], required: false },
 });
 
+
+
 AssociazioneSchema.pre("save", function (next) {
   var user = this;
 

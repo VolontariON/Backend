@@ -21,6 +21,7 @@ import {
   getAssociazioni,
   //
   getSubAssociazioni,
+  registrazioneAssociazione,
 } from "../controllers/AssociazioneController.js";
 const router = express.Router();
 

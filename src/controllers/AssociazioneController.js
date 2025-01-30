@@ -4,6 +4,7 @@ import logger from "../utils/logger.js";
 import fs from "fs/promises";
 import { getConfig } from "../utils/globals.js";
 import Associazione from "../models/AssociazioneModel.js";
+import jwt from "jsonwebtoken";
 const config = await getConfig();
 const TEMPLATES_PATH = "src/templates";
 const mailjetClient = mailjet.apiConnect(
@@ -49,16 +50,114 @@ export const getAssociazioni = async (req, res) => {
     });
 };
 
+export const login = async (req, res) => {
+  // TODO: SWAGGER
+  logger.info(req.body);
+  try {
+    const { email, password } = req.body;
+    const queryVol = Associazione.where({ email: email });
+    const user = await queryVol.findOne();
+    if (!user) {
+      res.status(604).json({ error: "email not found" });
+      logger.error("email not found: " + res.status);
+      return;
+    }
+
+    user.comparePassword(password, (err, isMatch) => {
+      if (err) {
+        res.status(500).json({ error: "server error" });
+        logger.error("Errore durante il confronto delle password:", err);
+        return;
+      }
+      if (isMatch) {
+        // OK -> sign jwt
+        const userData = user.toObject();
+        delete userData.password;
+        delete userData.profilePicture;
+        logger.info(userData);
+        try {
+          const token = jwt.sign(userData, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+          });
+          logger.info("saoidhsaoidsaiodhsa "+token)
+          res.cookie("token", token, { httpOnly: true });
+        } catch (err) {
+          logger.error(err);
+        }
+        res.status(201).json({ response: "OK" });
+        logger.info("login with status code: " + res.statusCode);
+      } else {
+        res.status(606).json({ error: "Wrong password" });
+        logger.error("login with status code: " + res.statusCode);
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
 export const getCurrentAssociazione = async (req, res) => {
   // *SWAGGER
   try {
     const jwtuserid = req.jwtuser._id;
     const associazione = await Associazione.findById(jwtuserid).select(
-      "-password"
     );
+
     const associazioneData = associazione.toObject();
     res.status(201).json(associazioneData);
     logger.info("getCurrentAssociazione: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
+export const changePassword = async (req, res) => {
+  // *SWAGGER
+  try {
+    const jwtuserid = req.jwtuser._id;
+    const associazione = await Associazione.findById(jwtuserid);
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
+
+    associazione.comparePassword(password, async (err, isMatch) => {
+          if (err) {
+            res.status(500).json({ error: "server error" });
+            logger.error("Errore durante il confronto delle password:", err);
+            return;
+          }
+    
+          if (isMatch) {
+            associazione.password = newPassword;
+            await associazione.save();
+            res.status(201).json({ res: "OK" })
+          } else {
+            res.status(606).json({ error: "Wrong password" });
+            logger.error("login with status code: " + res.statusCode);
+          }
+        });
+
+    logger.info("getCurrentAssociazione: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
+export const modifyProfile = async (req, res) => {
+  try {
+    //get current user
+    const jwtuserid = req.jwtuser._id;
+    const associazione = await Associazione.findById(jwtuserid);
+
+    Object.entries(req.body.data).forEach(([key, value]) => {
+      associazione[key] = value;
+    });
+    await associazione.save();
+    res.status(201).json({ response: "OK" });
+    logger.info("associazione profile modified: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });
     logger.error(err);

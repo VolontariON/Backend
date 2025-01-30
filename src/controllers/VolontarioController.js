@@ -30,6 +30,7 @@ export const getCurrentVolontario = async (req, res) => {
   // *SWAGGER
   try {
     const jwtuserid = req.jwtuser._id;
+    logger.info(jwtuserid);
     const user = await Volontario.findById(jwtuserid).select("-password");
     const userData = user.toObject();
     res.status(201).json(userData);
@@ -159,6 +160,24 @@ export const modifySkills = async (req, res) => {
   }
 };
 
+export const modifyProfile = async (req, res) => {
+  try {
+    //get current user
+    const jwtuserid = req.jwtuser._id;
+    const user = await Volontario.findById(jwtuserid);
+
+    Object.entries(req.body.data).forEach(([key, value]) => {
+      user[key] = value;
+    });
+    await user.save();
+    res.status(201).json({ response: "OK" });
+    logger.info("user profile modified: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
 export const getprofilePicture = async (req, res) => {
   try {
     //get current user
@@ -183,6 +202,38 @@ export const deleteAccount = async (req, res) => {
     deleteAccountEmail(email, name, req, res);
     res.status(201).json({ response: "OK" });
     logger.info("deleted account: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
+export const changePassword = async (req, res) => {
+  // *SWAGGER
+  try {
+    const jwtuserid = req.jwtuser._id;
+    const volontario = await Volontario.findById(jwtuserid);
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
+    volontario.comparePassword(password, async (err, isMatch) => {
+      if (err) {
+        res.status(500).json({ error: "server error" });
+        logger.error("Errore durante il confronto delle password:", err);
+        return;
+      }
+
+      if (isMatch) {
+        volontario.password = newPassword;
+        await volontario.save();
+        res.status(201).json({ res: "OK" })
+      } else {
+        res.status(606).json({ error: "Wrong password" });
+        logger.error("login with status code: " + res.statusCode);
+      }
+    });
+
+    logger.info("changePassword: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });
     logger.error(err);

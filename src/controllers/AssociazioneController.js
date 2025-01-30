@@ -146,6 +146,24 @@ export const changePassword = async (req, res) => {
   }
 };
 
+export const modifyProfile = async (req, res) => {
+  try {
+    //get current user
+    const jwtuserid = req.jwtuser._id;
+    const associazione = await Associazione.findById(jwtuserid);
+
+    Object.entries(req.body.data).forEach(([key, value]) => {
+      associazione[key] = value;
+    });
+    await associazione.save();
+    res.status(201).json({ response: "OK" });
+    logger.info("associazione profile modified: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
 // export const getSubAssociazioni = async (req, res) => {
 //   // *swagger
 //   logger.info("getAssociazioni with status code: " + res.statusCode);

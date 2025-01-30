@@ -15,12 +15,14 @@ import { logout } from "../controllers/UtilsController.js";
 import { cookiejwtAuth } from "../middleware/cookiejwtAuth.js";
 import { payloadSize } from "../middleware/payloadSize.js";
 import {
+  registrazioneAssociazione,
   getAssociazioni,
   getSubAssociazioni,
 } from "../controllers/AssociazioneController.js";
 const router = express.Router();
 
 router.post("/registrazioneVolontario", registrazioneVolontario);
+router.post("/registrazioneAssociazione", registrazioneAssociazione);
 router.post("/login", login);
 router.get("/getVolontari", cookiejwtAuth, getVolontari);
 router.get("/getAssociazioni", cookiejwtAuth, getAssociazioni);

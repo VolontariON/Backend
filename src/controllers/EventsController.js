@@ -94,3 +94,30 @@ export const deleteEvent = async (req, res) => {
     logger.error(err);
   }
 };
+
+export const modifyEvent = async (req, res) => {
+  try {
+    //get current user
+    const jwtuserid = req.jwtuser._id;
+    const eventId = req.body.data._id;
+
+    var associazione = await Associazione.findById(jwtuserid);
+    if (associazione._id != jwtuserid) {
+      return res.status(404).json({ error: "Not authorized" });
+    }
+    var evento = await Eventi.findById(eventId);
+    if (!evento) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+    Object.entries(req.body.data).forEach(([key, value]) => {
+      evento[key] = value;
+    });
+    await evento.save();
+    res.status(201).json({ response: "OK" });
+    logger.info("Event modified: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};

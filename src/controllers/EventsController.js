@@ -30,7 +30,6 @@ export const getMyEventi = async (req, res) => {
   Eventi.find({ hostAssociation: jwtuserid })
     .then(function (users) {
       res.status(201).json(users);
-      logger.info("dassdada:"+users+jwtuserid);
     })
     .catch(function (err) {
       res.status(500).json({ error: "server error" });
@@ -58,6 +57,38 @@ export const creaEvento = async (req, res) => {
 
     res.status(201).json({response : "ok"});
     logger.info("creaEvento: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
+export const deleteEvent = async (req, res) => {
+  // *SWAGGER
+  try {
+    logger.info("deleteEvent: " + req.body);
+    const jwtuserid = req.jwtuser._id;
+    const eventId = req.body.eventId;
+
+    var result = await Eventi.findById(eventId);
+    if (!result) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+     result = await Associazione.findById(jwtuserid);
+    if (!result) {
+      return res.status(404).json({ error: "Associazione not found" });
+    }
+
+    await Associazione.updateOne(
+      { _id: jwtuserid }, // Find the association by its ID
+      { $pull: { createdEvents: eventId } } // Remove the eventId from the createdEvents array
+    );
+
+    await Eventi.findByIdAndDelete(eventId)
+
+    res.status(201).json({response : "ok"});
+    logger.info("deleteEvent: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });
     logger.error(err);

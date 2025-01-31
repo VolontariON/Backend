@@ -12,20 +12,32 @@
     }
   ],
   "paths": {
-    "/users/getVolontari": {
+    "/users/logout": {
       "get": {
-        "summary": "Ottieni tutti i volontari",
-        "description": "Restituisce una lista di tutti i volontari presenti nel database",
+        "summary": "Logout volontario",
+        "description": "Effettua il logout del volontario corrente",
+        "responses": {
+          "200": {
+            "description": "Logout effettuato con successo"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/users/getProfilePicture": {
+      "get": {
+        "summary": "Ottieni l'immagine del profilo",
+        "description": "Restituisce l'immagine del profilo del volontario loggato",
         "responses": {
           "201": {
-            "description": "Lista di volontari",
+            "description": "Immagine del profilo",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Volontario"
-                  }
+                  "type": "string",
+                  "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
                 }
               }
             }
@@ -36,46 +48,151 @@
         }
       }
     },
-    "/users/getCurrentVolontario": {
-      "get": {
-        "summary": "Ottieni il volontario loggato",
-        "description": "restituisce i dati del volontario attualmente loggato, meno la password",
-        "responses": {
-          "201": {
-            "description": "il volontario",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/Volontario"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "server error"
-          }
-        }
-      }
-    },
-    "/users/registrazioneVolontario": {
-      "post": {
-        "summary": "Registra un nuovo volontario",
-        "description": "Permette di registrare un nuovo volontario",
+    "/users/modifyProfilePicture": {
+      "put": {
+        "summary": "Modifica l'immagine del profilo",
+        "description": "Aggiorna l'immagine del profilo del volontario",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Volontario"
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "description": "Stringa Base64 dell'immagine"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Volontario registrato con successo"
+            "description": "Immagine modificata con successo"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/users/modifyDescription": {
+      "put": {
+        "summary": "Modifica la descrizione del volontario",
+        "description": "Aggiorna la descrizione del volontario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Descrizione modificata con successo"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/users/modifySkills": {
+      "put": {
+        "summary": "Modifica le competenze del volontario",
+        "description": "Aggiorna l'elenco delle competenze del volontario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "skills": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Competenze modificate con successo"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/users/modifyProfile": {
+      "post": {
+        "summary": "Modifica il profilo del volontario",
+        "description": "Permette di aggiornare i dati del profilo del volontario loggato",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Profilo modificato con successo"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/users/deleteAccount": {
+      "delete": {
+        "summary": "Elimina l'account del volontario",
+        "description": "Permette di eliminare definitivamente l'account del volontario loggato",
+        "responses": {
+          "201": {
+            "description": "Account eliminato con successo"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/users/registrazioneAssociazione": {
+      "post": {
+        "summary": "Registra una nuova associazione",
+        "description": "Permette di registrare una nuova associazione",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Associazione"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Associazione registrata con successo"
           },
           "400": {
             "description": "Errore nei dati forniti"
@@ -86,39 +203,50 @@
         }
       }
     },
-    "/users/loginVolontario": {
-      "post": {
-        "summary": "Login di un volontario",
-        "description": "Permette a un volontario di effettuare il login",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "mario.rossi@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "password123"
+    "/users/getAssociazioni": {
+      "get": {
+        "summary": "Ottieni tutte le associazioni",
+        "description": "Restituisce la lista di tutte le associazioni registrate nel database",
+        "responses": {
+          "201": {
+            "description": "Lista delle associazioni",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Associazione"
                   }
                 }
               }
             }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Login effettuato con successo"
-          },
-          "401": {
-            "description": "Credenziali non valide"
           },
           "500": {
-            "description": "Errore del server"
+            "description": "server error"
+          }
+        }
+      }
+    },
+    "/users/getSubAssociazioni": {
+      "get": {
+        "summary": "Ottieni le associazioni seguite dal volontario",
+        "description": "Restituisce la lista delle associazioni seguite dal volontario loggato",
+        "responses": {
+          "201": {
+            "description": "Lista delle associazioni seguite",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Associazione"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error"
           }
         }
       }

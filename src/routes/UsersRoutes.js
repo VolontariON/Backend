@@ -21,12 +21,14 @@ import {
   getAssociazioni,
   //
   getSubAssociazioni,
+  registrazioneAssociazione,
 } from "../controllers/AssociazioneController.js";
 const router = express.Router();
 
 router.post("/registrazioneVolontario", registrazioneVolontario);
+router.post("/registrazioneAssociazione", registrazioneAssociazione);
 router.post("/login", login);
-router.post("/changePassword", cookiejwtAuth,changePassword);
+router.post("/changePassword", cookiejwtAuth, changePassword);
 router.get("/getVolontari", cookiejwtAuth, getVolontari);
 router.get("/getAssociazioni", cookiejwtAuth, getAssociazioni);
 router.get("/getSubAssociazioni", cookiejwtAuth, getSubAssociazioni);

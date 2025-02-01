@@ -23,6 +23,20 @@ export const getEventi = async (req, res) => {
     });
 };
 
+export const getEvent = async (req, res) => {
+  // *swagger
+  logger.info("getEvent with status code: " + res.statusCode);
+  const id = req.query.id
+  Eventi.findById(id)
+    .then(function (users) {
+      res.status(201).json(users);
+    })
+    .catch(function (err) {
+      res.status(500).json({ error: "server error" });
+      logger.error(err);
+    });
+};
+
 export const getMyEventi = async (req, res) => {
   // *swagger
   logger.info("getMyEventi with status code: " + res.statusCode);
@@ -49,6 +63,7 @@ export const creaEvento = async (req, res) => {
 
     const evento = new Eventi(req.body);
     evento.hostAssociation = jwtuserid;
+    evento.hostAssociationName = associazione.name;
     await evento.save();
 
     associazione.createdEvents.push(evento.id);

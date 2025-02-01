@@ -6,9 +6,12 @@ import { creaEvento } from "../controllers/EventsController.js";
 import { getMyEventi } from "../controllers/EventsController.js";
 import { deleteEvent } from "../controllers/EventsController.js";
 import { modifyEvent } from "../controllers/EventsController.js";
+import { getEvent } from "../controllers/EventsController.js";
 const router = express.Router();
 
 router.get("/getEventi", getEventi);
+router.get("/getEvent", getEvent);
+
 router.get("/getMyEventi", cookiejwtAuth, getMyEventi);
 router.post("/creaEvento", cookiejwtAuth, creaEvento);
 router.delete("/deleteEvent", cookiejwtAuth, deleteEvent);

@@ -1,5 +1,6 @@
 import Eventi from "../models/EventiModel.js";
 import Associazione from "../models/AssociazioneModel.js";
+import Volontario from "../models/VolontarioModel.js";
 import logger from "../utils/logger.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
@@ -37,7 +38,7 @@ export const getEvent = async (req, res) => {
     });
 };
 
-export const getMyEventi = async (req, res) => {
+export const getMyEventiAssociazione = async (req, res) => {
   // *swagger
   logger.info("getMyEventi with status code: " + res.statusCode);
   const jwtuserid = req.jwtuser._id;
@@ -51,6 +52,82 @@ export const getMyEventi = async (req, res) => {
     });
 };
 
+export const getMyEventiVolontario = async (req, res) => {
+  // *swagger
+  logger.info("getMyEventiVolontario with status code: " + res.statusCode);
+  const jwtuserid = req.jwtuser._id;
+
+  const vol = await Volontario.findById(jwtuserid);
+    if (!vol) {
+      return res.status(404).json({ error: "Volontario not found" });
+    }
+  await Eventi.find({ '_id': { $in: vol.subscribedEvents } })
+    .then(function (users) {
+      logger.info(users);
+      res.status(201).json(users);
+    })
+    .catch(function (err) {
+      res.status(500).json({ error: "server error" });
+      logger.error(err);
+    });
+};
+
+
+export const unsubscribeEvent = async (req, res) => {
+  // *swagger
+  logger.info("unsubscribeEvent with status code: " + res.statusCode);
+  const jwtuserid = req.jwtuser._id;
+
+  const vol = await Volontario.findById(jwtuserid);
+    if (!vol) {
+      return res.status(404).json({ error: "Volontario not found" });
+    }
+    const event = await Eventi.findById(req.body.id);
+    if (!event) {
+      return res.status(404).json({ error: "event not found" });
+    }
+
+    vol.subscribedEvents.pull(req.body.id );
+    event.subscribedVolonteers.pull(jwtuserid);
+
+    try{
+      await vol.save();
+      await event.save();
+      res.status(201).json({response : "ok"});
+
+
+    }catch(err){
+      res.status(500).json({ error: "server error" });
+      logger.error(err);
+    }
+};
+
+export const subscribeEvent = async (req, res) => {
+  // *swagger
+
+  try {
+    logger.info("subscribeEvent with status code: " + res.statusCode);
+    const jwtuserid = req.jwtuser._id;
+
+    var vol = await Volontario.findById(jwtuserid);
+    if (!vol) {
+      return res.status(404).json({ error: "Volontario not found" });
+    }
+    var event = await Eventi.findById(req.body.id);
+    if (!event) {
+      return res.status(404).json({ error: "event not found" });
+    }
+
+    vol.subscribedEvents.push(event._id);
+    event.subscribedVolonteers.push(vol._id);
+    await vol.save();
+    await event.save();
+    res.status(201).json({ response: "ok" });
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
 
 export const creaEvento = async (req, res) => {
   // *SWAGGER
@@ -70,7 +147,7 @@ export const creaEvento = async (req, res) => {
 
     await associazione.save();
 
-    res.status(201).json({response : "ok"});
+    res.status(201).json({ response: "ok" });
     logger.info("creaEvento: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });
@@ -90,7 +167,7 @@ export const deleteEvent = async (req, res) => {
       return res.status(404).json({ error: "Event not found" });
     }
 
-     result = await Associazione.findById(jwtuserid);
+    result = await Associazione.findById(jwtuserid);
     if (!result) {
       return res.status(404).json({ error: "Associazione not found" });
     }
@@ -102,7 +179,7 @@ export const deleteEvent = async (req, res) => {
 
     await Eventi.findByIdAndDelete(eventId)
 
-    res.status(201).json({response : "ok"});
+    res.status(201).json({ response: "ok" });
     logger.info("deleteEvent: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });

@@ -11,27 +11,27 @@ import {
   deleteAccount,
   changePassword,
   modifyProfile,
+  getVolontario,
+  getAssociazioniIscritte,
+  unsubscribeAssociazione,
+  seguiAssociazione,
 } from "../controllers/VolontarioController.js";
 
 import { logout } from "../controllers/UtilsController.js";
 import { cookiejwtAuth } from "../middleware/cookiejwtAuth.js";
 import { payloadSize } from "../middleware/payloadSize.js";
-import {
-  //AssociazioniRoutes?
-  getAssociazioni,
-  //
-  getSubAssociazioni,
-  registrazioneAssociazione,
-} from "../controllers/AssociazioneController.js";
 const router = express.Router();
 
 router.post("/registrazioneVolontario", registrazioneVolontario);
-router.post("/registrazioneAssociazione", registrazioneAssociazione);
+
 router.post("/login", login);
 router.post("/changePassword", cookiejwtAuth, changePassword);
 router.get("/getVolontari", cookiejwtAuth, getVolontari);
-router.get("/getAssociazioni", cookiejwtAuth, getAssociazioni);
-router.get("/getSubAssociazioni", cookiejwtAuth, getSubAssociazioni);
+//router.get("/getSubAssociazioni", cookiejwtAuth, getSubAssociazioni);
+router.get("/getVolontario", getVolontario);
+router.get("/getAssociazioniIscritte",cookiejwtAuth, getAssociazioniIscritte);
+router.post("/unsubscribeAssociazione",cookiejwtAuth, unsubscribeAssociazione);
+router.post("/seguiAssociazione", cookiejwtAuth, seguiAssociazione);
 
 router.get("/getCurrentVolontario", cookiejwtAuth, getCurrentVolontario);
 router.put(

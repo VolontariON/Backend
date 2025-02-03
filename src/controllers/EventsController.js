@@ -66,7 +66,6 @@ export const getEventiAssociazioniIscritte = async (req, res) => {
 
     return res.status(200).json(events);
 } catch (error) {
-    console.error("Error fetching events:", error);
     return res.status(500).json({ error: "Internal Server Error" });
 }
 };

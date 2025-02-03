@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import { getConfig } from "../utils/globals.js";
 import Associazione from "../models/AssociazioneModel.js";
 import Volontario from "../models/VolontarioModel.js";
+import Eventi from "../models/EventiModel.js";
 import jwt from "jsonwebtoken";
 const config = await getConfig();
 const TEMPLATES_PATH = "src/templates";
@@ -51,28 +52,7 @@ export const getAssociazioni = async (req, res) => {
     });
 };
 
-export const seguiAssociazione = async (req, res) => {
-  try {
-    const jwtuserid = req.jwtuser._id;
-    const volontario = await Volontario.findById(jwtuserid).select(
-    );
-    const idAssociazione = req.body.idAssociazione;
-    const associazione = await Associazione.findById(idAssociazione).select(
-    );
 
-    volontario.followedAssociations.push(idAssociazione);
-    associazione.subscribedVolunteers.push(jwtuserid);
-
-    await volontario.save()
-    await associazione.save()
-    
-    res.status(201).json({response : "ok" });
-    logger.info("seguiAssociazione: " + res.statusCode);
-  } catch (err) {
-    res.status(500).json({ error: "server error" });
-    logger.error(err);
-  }
-};
 
 
 export const login = async (req, res) => {
@@ -119,6 +99,35 @@ export const login = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "server error" });
     logger.error(err);
+  }
+};
+
+
+export const getVolontariIscrittiEvento = async (req, res) => {
+  try {
+    
+      const jwtuserid = req.jwtuser._id;
+      const eventId = req.query.id;
+     
+      const event = await Eventi.findById(eventId);
+      if(!event){
+        return res.status(500).json({ error: "event not found" });
+      }
+      if(event.hostAssociation != jwtuserid){
+        return res.status(500).json({ error: "not authorized" });
+      }
+      const subscribedVolonteers = event.subscribedVolonteers;
+
+      
+      if (!subscribedVolonteers || subscribedVolonteers.length === 0) {
+          return res.status(200).json([]); // No subscribed Volonteers, return empty array
+      }
+  
+      const volontari = await Volontario.find({ _id: { $in: subscribedVolonteers } });
+      logger.info(volontari);
+      return res.status(200).json(volontari);
+  } catch (error) {
+      return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

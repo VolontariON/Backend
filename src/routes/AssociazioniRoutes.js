@@ -5,7 +5,9 @@ import {
     getCurrentAssociazione,
     login,
     changePassword,
-    modifyProfile
+    modifyProfile,
+    getAssociazione,
+    seguiAssociazione
 } from "../controllers/AssociazioneController.js";
 
 import { logout } from "../controllers/UtilsController.js";
@@ -19,6 +21,8 @@ router.post("/registrazioneAssociazione", registrazioneAssociazione);
 router.post("/login", login);
 router.post("/changePassword", cookiejwtAuth,changePassword);
 router.post("/modifyProfile", cookiejwtAuth, modifyProfile);
+router.post("/seguiAssociazione", cookiejwtAuth, seguiAssociazione);
+router.get("/getAssociazione", getAssociazione);
 
 
 

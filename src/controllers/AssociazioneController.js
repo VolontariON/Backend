@@ -4,6 +4,7 @@ import logger from "../utils/logger.js";
 import fs from "fs/promises";
 import { getConfig } from "../utils/globals.js";
 import Associazione from "../models/AssociazioneModel.js";
+import Volontario from "../models/VolontarioModel.js";
 import jwt from "jsonwebtoken";
 const config = await getConfig();
 const TEMPLATES_PATH = "src/templates";
@@ -49,6 +50,30 @@ export const getAssociazioni = async (req, res) => {
       logger.error(err);
     });
 };
+
+export const seguiAssociazione = async (req, res) => {
+  try {
+    const jwtuserid = req.jwtuser._id;
+    const volontario = await Volontario.findById(jwtuserid).select(
+    );
+    const idAssociazione = req.body.idAssociazione;
+    const associazione = await Associazione.findById(idAssociazione).select(
+    );
+
+    volontario.followedAssociations.push(idAssociazione);
+    associazione.subscribedVolunteers.push(jwtuserid);
+
+    await volontario.save()
+    await associazione.save()
+    
+    res.status(201).json({response : "ok" });
+    logger.info("seguiAssociazione: " + res.statusCode);
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
 
 export const login = async (req, res) => {
   // TODO: SWAGGER
@@ -112,7 +137,20 @@ export const getCurrentAssociazione = async (req, res) => {
     logger.error(err);
   }
 };
-
+export const getAssociazione = async (req, res) => {
+  // *SWAGGER
+  logger.info("getAssociazione with status code: " + res.statusCode);
+    const id = req.query.id
+    logger.info(id);
+    Associazione.findById(id)
+      .then(function (users) {
+        res.status(201).json({users});
+      })
+      .catch(function (err) {
+        res.status(500).json({ error: "server error" });
+        logger.error(err);
+      });
+};
 export const changePassword = async (req, res) => {
   // *SWAGGER
   try {

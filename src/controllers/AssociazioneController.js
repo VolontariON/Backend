@@ -52,9 +52,6 @@ export const getAssociazioni = async (req, res) => {
     });
 };
 
-
-
-
 export const login = async (req, res) => {
   // TODO: SWAGGER
   logger.info(req.body);
@@ -84,7 +81,7 @@ export const login = async (req, res) => {
           const token = jwt.sign(userData, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
-          logger.info("saoidhsaoidsaiodhsa "+token)
+          logger.info("saoidhsaoidsaiodhsa " + token);
           res.cookie("token", token, { httpOnly: true });
         } catch (err) {
           logger.error(err);
@@ -102,32 +99,31 @@ export const login = async (req, res) => {
   }
 };
 
-
 export const getVolontariIscrittiEvento = async (req, res) => {
   try {
-    
-      const jwtuserid = req.jwtuser._id;
-      const eventId = req.query.id;
-     
-      const event = await Eventi.findById(eventId);
-      if(!event){
-        return res.status(500).json({ error: "event not found" });
-      }
-      if(event.hostAssociation != jwtuserid){
-        return res.status(500).json({ error: "not authorized" });
-      }
-      const subscribedVolonteers = event.subscribedVolonteers;
+    const jwtuserid = req.jwtuser._id;
+    const eventId = req.query.id;
 
-      
-      if (!subscribedVolonteers || subscribedVolonteers.length === 0) {
-          return res.status(200).json([]); // No subscribed Volonteers, return empty array
-      }
-  
-      const volontari = await Volontario.find({ _id: { $in: subscribedVolonteers } });
-      logger.info(volontari);
-      return res.status(200).json(volontari);
+    const event = await Eventi.findById(eventId);
+    if (!event) {
+      return res.status(500).json({ error: "event not found" });
+    }
+    if (event.hostAssociation != jwtuserid) {
+      return res.status(500).json({ error: "not authorized" });
+    }
+    const subscribedVolonteers = event.subscribedVolonteers;
+
+    if (!subscribedVolonteers || subscribedVolonteers.length === 0) {
+      return res.status(200).json([]); // No subscribed Volonteers, return empty array
+    }
+
+    const volontari = await Volontario.find({
+      _id: { $in: subscribedVolonteers },
+    });
+    logger.info(volontari);
+    return res.status(200).json(volontari);
   } catch (error) {
-      return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -136,8 +132,8 @@ export const getCurrentAssociazione = async (req, res) => {
   try {
     const jwtuserid = req.jwtuser._id;
     const associazione = await Associazione.findById(jwtuserid).select(
+      "-password"
     );
-
     const associazioneData = associazione.toObject();
     res.status(201).json(associazioneData);
     logger.info("getCurrentAssociazione: " + res.statusCode);
@@ -149,16 +145,16 @@ export const getCurrentAssociazione = async (req, res) => {
 export const getAssociazione = async (req, res) => {
   // *SWAGGER
   logger.info("getAssociazione with status code: " + res.statusCode);
-    const id = req.query.id
-    logger.info(id);
-    Associazione.findById(id)
-      .then(function (users) {
-        res.status(201).json({users});
-      })
-      .catch(function (err) {
-        res.status(500).json({ error: "server error" });
-        logger.error(err);
-      });
+  const id = req.query.id;
+  logger.info(id);
+  Associazione.findById(id)
+    .then(function (users) {
+      res.status(201).json({ users });
+    })
+    .catch(function (err) {
+      res.status(500).json({ error: "server error" });
+      logger.error(err);
+    });
 };
 export const changePassword = async (req, res) => {
   // *SWAGGER
@@ -168,23 +164,22 @@ export const changePassword = async (req, res) => {
     const password = req.body.password;
     const newPassword = req.body.newPassword;
 
-
     associazione.comparePassword(password, async (err, isMatch) => {
-          if (err) {
-            res.status(500).json({ error: "server error" });
-            logger.error("Errore durante il confronto delle password:", err);
-            return;
-          }
-    
-          if (isMatch) {
-            associazione.password = newPassword;
-            await associazione.save();
-            res.status(201).json({ res: "OK" })
-          } else {
-            res.status(606).json({ error: "Wrong password" });
-            logger.error("login with status code: " + res.statusCode);
-          }
-        });
+      if (err) {
+        res.status(500).json({ error: "server error" });
+        logger.error("Errore durante il confronto delle password:", err);
+        return;
+      }
+
+      if (isMatch) {
+        associazione.password = newPassword;
+        await associazione.save();
+        res.status(201).json({ res: "OK" });
+      } else {
+        res.status(606).json({ error: "Wrong password" });
+        logger.error("login with status code: " + res.statusCode);
+      }
+    });
 
     logger.info("getCurrentAssociazione: " + res.statusCode);
   } catch (err) {

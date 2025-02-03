@@ -27,7 +27,6 @@ export const getVolontari = async (req, res) => {
     });
 };
 
-
 export const getCurrentVolontario = async (req, res) => {
   // *SWAGGER
   try {
@@ -149,19 +148,17 @@ export const modifyDescription = async (req, res) => {
 export const getVolontario = async (req, res) => {
   // *SWAGGER
   logger.info("getVolontario with status code: " + res.statusCode);
-    const id = req.query.id
-    logger.info("sadasd"+id);
-    Volontario.findById(id)
-      .then(function (users) {
-        res.status(201).json(users);
-      })
-      .catch(function (err) {
-        res.status(500).json({ error: "server error" });
-        logger.error(err);
-      });
+  const id = req.query.id;
+  logger.info("sadasd" + id);
+  Volontario.findById(id)
+    .then(function (users) {
+      res.status(201).json(users);
+    })
+    .catch(function (err) {
+      res.status(500).json({ error: "server error" });
+      logger.error(err);
+    });
 };
-
-
 
 export const modifySkills = async (req, res) => {
   try {
@@ -245,7 +242,7 @@ export const changePassword = async (req, res) => {
       if (isMatch) {
         volontario.password = newPassword;
         await volontario.save();
-        res.status(201).json({ res: "OK" })
+        res.status(201).json({ res: "OK" });
       } else {
         res.status(606).json({ error: "Wrong password" });
         logger.error("login with status code: " + res.statusCode);
@@ -262,39 +259,37 @@ export const changePassword = async (req, res) => {
 export const getAssociazioniIscritte = async (req, res) => {
   // *swagger
   logger.info("getAssociazioniIscritte with status code: " + res.statusCode);
-    const jwtuserid = req.jwtuser._id;
-  
-    const vol = await Volontario.findById(jwtuserid);
-      if (!vol) {
-        return res.status(404).json({ error: "Volontario not found" });
-      }
-    await Associazione.find({ '_id': { $in: vol.followedAssociations } })
-      .then(function (data) {
-        logger.info(data);
-        res.status(201).json(data);
-      })
-      .catch(function (err) {
-        res.status(500).json({ error: "server error" });
-        logger.error(err);
-      });
+  const jwtuserid = req.jwtuser._id;
+
+  const vol = await Volontario.findById(jwtuserid);
+  if (!vol) {
+    return res.status(404).json({ error: "Volontario not found" });
+  }
+  await Associazione.find({ _id: { $in: vol.followedAssociations } })
+    .then(function (data) {
+      logger.info(data);
+      res.status(201).json(data);
+    })
+    .catch(function (err) {
+      res.status(500).json({ error: "server error" });
+      logger.error(err);
+    });
 };
 
 export const seguiAssociazione = async (req, res) => {
   try {
     const jwtuserid = req.jwtuser._id;
-    const volontario = await Volontario.findById(jwtuserid).select(
-    );
+    const volontario = await Volontario.findById(jwtuserid).select();
     const idAssociazione = req.body.idAssociazione;
-    const associazione = await Associazione.findById(idAssociazione).select(
-    );
+    const associazione = await Associazione.findById(idAssociazione).select();
 
     volontario.followedAssociations.push(idAssociazione);
     associazione.subscribedVolunteers.push(jwtuserid);
 
-    await volontario.save()
-    await associazione.save()
-    
-    res.status(201).json({response : "ok" });
+    await volontario.save();
+    await associazione.save();
+
+    res.status(201).json({ response: "ok" });
     logger.info("seguiAssociazione: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });
@@ -304,19 +299,17 @@ export const seguiAssociazione = async (req, res) => {
 export const unsubscribeAssociazione = async (req, res) => {
   try {
     const jwtuserid = req.jwtuser._id;
-    const volontario = await Volontario.findById(jwtuserid).select(
-    );
+    const volontario = await Volontario.findById(jwtuserid).select();
     const idAssociazione = req.body.id;
-    const associazione = await Associazione.findById(idAssociazione).select(
-    );
+    const associazione = await Associazione.findById(idAssociazione).select();
 
     volontario.followedAssociations.pull(idAssociazione);
     associazione.subscribedVolunteers.pull(jwtuserid);
 
-    await volontario.save()
-    await associazione.save()
-    
-    res.status(201).json({response : "ok" });
+    await volontario.save();
+    await associazione.save();
+
+    res.status(201).json({ response: "ok" });
     logger.info("unsubscribeAssociazione: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });

@@ -4,6 +4,8 @@ import logger from "../utils/logger.js";
 import fs from "fs/promises";
 import { getConfig } from "../utils/globals.js";
 import Associazione from "../models/AssociazioneModel.js";
+import Volontario from "../models/VolontarioModel.js";
+import Eventi from "../models/EventiModel.js";
 import jwt from "jsonwebtoken";
 const config = await getConfig();
 const TEMPLATES_PATH = "src/templates";
@@ -49,6 +51,9 @@ export const getAssociazioni = async (req, res) => {
       logger.error(err);
     });
 };
+
+
+
 
 export const login = async (req, res) => {
   // TODO: SWAGGER
@@ -97,6 +102,35 @@ export const login = async (req, res) => {
   }
 };
 
+
+export const getVolontariIscrittiEvento = async (req, res) => {
+  try {
+    
+      const jwtuserid = req.jwtuser._id;
+      const eventId = req.query.id;
+     
+      const event = await Eventi.findById(eventId);
+      if(!event){
+        return res.status(500).json({ error: "event not found" });
+      }
+      if(event.hostAssociation != jwtuserid){
+        return res.status(500).json({ error: "not authorized" });
+      }
+      const subscribedVolonteers = event.subscribedVolonteers;
+
+      
+      if (!subscribedVolonteers || subscribedVolonteers.length === 0) {
+          return res.status(200).json([]); // No subscribed Volonteers, return empty array
+      }
+  
+      const volontari = await Volontario.find({ _id: { $in: subscribedVolonteers } });
+      logger.info(volontari);
+      return res.status(200).json(volontari);
+  } catch (error) {
+      return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export const getCurrentAssociazione = async (req, res) => {
   // *SWAGGER
   try {
@@ -112,7 +146,20 @@ export const getCurrentAssociazione = async (req, res) => {
     logger.error(err);
   }
 };
-
+export const getAssociazione = async (req, res) => {
+  // *SWAGGER
+  logger.info("getAssociazione with status code: " + res.statusCode);
+    const id = req.query.id
+    logger.info(id);
+    Associazione.findById(id)
+      .then(function (users) {
+        res.status(201).json({users});
+      })
+      .catch(function (err) {
+        res.status(500).json({ error: "server error" });
+        logger.error(err);
+      });
+};
 export const changePassword = async (req, res) => {
   // *SWAGGER
   try {

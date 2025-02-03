@@ -37,6 +37,67 @@ export const getEvent = async (req, res) => {
       logger.error(err);
     });
 };
+export const getEventiAssociazioniIscritte = async (req, res) => {
+  // *swagger
+  try {
+    const jwtuserid = req.jwtuser._id;
+
+    // 🔹 Find the volunteer and get followed associations
+    const volunteer = await Volontario.findById(jwtuserid);
+    if (!volunteer) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const followedAssociations = volunteer.followedAssociations;
+    if (!followedAssociations || followedAssociations.length === 0) {
+        return res.status(200).json([]); // No followed associations, return empty array
+    }
+
+    // 🔹 Find all events created by the followed associations
+    const associations = await Associazione.find({ _id: { $in: followedAssociations } });
+    const createdEventsIds = associations.flatMap(assoc => assoc.createdEvents);
+
+    if (!createdEventsIds.length) {
+        return res.status(200).json([]); // No events found, return empty array
+    }
+
+    // 🔹 Fetch the events
+    const events = await Eventi.find({ _id: { $in: createdEventsIds } });
+
+    return res.status(200).json(events);
+} catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+}
+};
+/* export const getEventiAssociazioniIscritte = async (req, res) => {
+  // *swagger
+  logger.info("unsubscribeEvent with status code: " + res.statusCode);
+  const jwtuserid = req.jwtuser._id;
+
+  const vol = await Volontario.findById(jwtuserid);
+    if (!vol) {
+      return res.status(404).json({ error: "Volontario not found" });
+    }
+    
+    if (!vol.followedAssociations || vol.followedAssociations.length === 0) {
+      return res.status(400).json({ error: "No associations to search for." });
+  }
+
+    const associazioni = await Associazione.find({ '_id': { $in: vol.followedAssociations } })
+    
+
+    const event = await Eventi.findById({ '_id': { $in: associazioni.createdEvents } });
+    if (!event) {
+      return res.status(404).json({ error: "event not found" });
+    }
+
+    try{
+      res.status(201).json(event);
+    }catch(err){
+      res.status(500).json({ error: "server error" });
+      logger.error(err);
+    }
+}; */
 
 export const getMyEventiAssociazione = async (req, res) => {
   // *swagger

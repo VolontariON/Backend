@@ -9,14 +9,13 @@ const mongoConnect = async () => {
   intervalId = setInterval(() => {
     logger.warn("Attempting to connect to MongoDB...");
   }, 1000);
-  await mongoose.connect(
-    `mongodb://${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}`
-  );
+  // await mongoose.connect(
+  //   `mongodb://${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}`
+  // );
+  await mongoose.connect(process.env.DATABASE_URI);
 
   clearInterval(intervalId);
-  logger.info(
-    `connected to mongoDB on mongodb://${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}`
-  );
+  logger.info(`connected to mongoDB on mongodb://${process.env.DATABASE_URI}`);
 };
 
 const startServer = () => {

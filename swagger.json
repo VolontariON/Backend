@@ -250,6 +250,669 @@
           }
         }
       }
+    },
+
+    "/associazioni/registrazione": {
+      "post": {
+        "summary": "Registra una nuova associazione",
+        "description": "Permette di registrare una nuova associazione",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Associazione"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Associazione registrata con successo"
+          },
+          "400": {
+            "description": "Email già registrata"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/associazioni": {
+      "get": {
+        "summary": "Ottieni tutte le associazioni",
+        "description": "Restituisce la lista di tutte le associazioni registrate",
+        "responses": {
+          "200": {
+            "description": "Lista delle associazioni",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Associazione"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/associazioni/login": {
+      "post": {
+        "summary": "Login di un'associazione",
+        "description": "Permette di autenticare un'associazione tramite email e password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "info@volontaritn.it"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Login effettuato con successo"
+          },
+          "404": {
+            "description": "Email non trovata"
+          },
+          "401": {
+            "description": "Password errata"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/associazioni/volontariIscrittiEvento": {
+      "get": {
+        "summary": "Ottieni volontari iscritti a un evento",
+        "description": "Restituisce la lista dei volontari iscritti a un evento specifico",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID dell'evento"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista dei volontari iscritti",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Volontario"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Evento non trovato"
+          },
+          "403": {
+            "description": "Non autorizzato"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/associazioni/me": {
+      "get": {
+        "summary": "Ottieni i dati dell'associazione corrente",
+        "description": "Restituisce i dati dell'associazione autenticata",
+        "responses": {
+          "200": {
+            "description": "Dati dell'associazione",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Associazione"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/associazioni/{id}": {
+      "get": {
+        "summary": "Ottieni un'associazione",
+        "description": "Restituisce i dati di un'associazione specifica",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID dell'associazione"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dati dell'associazione",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Associazione"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Associazione non trovata"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/associazioni/changePassword": {
+      "put": {
+        "summary": "Modifica la password dell'associazione",
+        "description": "Permette di cambiare la password dell'associazione autenticata",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "passwordAttuale"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "nuovaPassword123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Password cambiata con successo"
+          },
+          "401": {
+            "description": "Password attuale errata"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/associazioni/modifyProfile": {
+      "put": {
+        "summary": "Modifica il profilo dell'associazione",
+        "description": "Permette di aggiornare i dati del profilo dell'associazione autenticata",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Profilo modificato con successo"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/associazioni/getSubAssociazioni": {
+      "get": {
+        "summary": "Ottieni le associazioni seguite dal volontario",
+        "description": "Restituisce la lista delle associazioni seguite dal volontario loggato",
+        "responses": {
+          "200": {
+            "description": "Lista delle associazioni seguite",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Associazione"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/utils/checkLoggedIn": {
+      "get": {
+        "summary": "Verifica se l'utente è loggato",
+        "description": "Ritorna una risposta di successo se l'utente è autenticato",
+        "responses": {
+          "201": {
+            "description": "Utente autenticato con successo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string",
+                      "example": "OK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/utils/logout": {
+      "get": {
+        "summary": "Logout utente",
+        "description": "Effettua il logout dell'utente corrente rimuovendo il cookie del token",
+        "responses": {
+          "201": {
+            "description": "Logout effettuato con successo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string",
+                      "example": "OK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/utils/sendEmail": {
+      "post": {
+        "summary": "Invia un'email di registrazione",
+        "description": "Invia un'email di benvenuto a un nuovo utente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "marccs35@gmail.com",
+                    "description": "Indirizzo email del destinatario"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Marco",
+                    "description": "Nome del destinatario"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email inviata con successo"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+
+    "/events": {
+      "get": {
+        "summary": "Ottieni tutti gli eventi",
+        "description": "Restituisce la lista di tutti gli eventi disponibili nel database",
+        "responses": {
+          "201": {
+            "description": "Lista degli eventi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Evento"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "summary": "Ottieni un evento specifico",
+        "description": "Restituisce i dettagli di un evento dato il suo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID dell'evento da recuperare"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Dati dell'evento",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Evento"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Evento non trovato"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/events/followedAssociations": {
+      "get": {
+        "summary": "Eventi delle associazioni seguite",
+        "description": "Restituisce gli eventi creati dalle associazioni seguite dal volontario loggato",
+        "responses": {
+          "200": {
+            "description": "Lista degli eventi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Evento"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Volontario non trovato"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/events/myEventsAssociation": {
+      "get": {
+        "summary": "Ottieni gli eventi della propria associazione",
+        "description": "Restituisce la lista degli eventi creati dall'associazione loggata",
+        "responses": {
+          "201": {
+            "description": "Lista degli eventi dell'associazione",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Evento"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/events/myEventsVolunteer": {
+      "get": {
+        "summary": "Ottieni gli eventi a cui il volontario è iscritto",
+        "description": "Restituisce la lista degli eventi a cui il volontario loggato è iscritto",
+        "responses": {
+          "201": {
+            "description": "Lista degli eventi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Evento"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Volontario non trovato"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/events/unsubscribe": {
+      "post": {
+        "summary": "Disiscrizione da un evento",
+        "description": "Permette al volontario loggato di annullare la propria iscrizione da un evento",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "65aabc123def456789012345",
+                    "description": "ID dell'evento da cui disiscriversi"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Disiscrizione avvenuta con successo"
+          },
+          "404": {
+            "description": "Evento o volontario non trovato"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/events/subscribe": {
+      "post": {
+        "summary": "Iscrizione a un evento",
+        "description": "Permette al volontario loggato di iscriversi a un evento",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "65aabc123def456789012345",
+                    "description": "ID dell'evento a cui iscriversi"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Iscrizione avvenuta con successo"
+          },
+          "404": {
+            "description": "Evento o volontario non trovato"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/events/create": {
+      "post": {
+        "summary": "Crea un nuovo evento",
+        "description": "Permette all'associazione loggata di creare un nuovo evento",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Evento"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Evento creato con successo"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/events/delete": {
+      "delete": {
+        "summary": "Elimina un evento",
+        "description": "Permette all'associazione loggata di eliminare un evento di sua proprietà",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "eventId": {
+                    "type": "string",
+                    "example": "65aabc123def456789012345",
+                    "description": "ID dell'evento da eliminare"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Evento eliminato con successo"
+          },
+          "404": {
+            "description": "Evento non trovato"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
+    },
+    "/events/modify": {
+      "put": {
+        "summary": "Modifica un evento",
+        "description": "Permette all'associazione loggata di modificare i dettagli di un evento",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Dati aggiornati dell'evento"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Evento modificato con successo"
+          },
+          "404": {
+            "description": "Evento non trovato"
+          },
+          "500": {
+            "description": "Errore del server"
+          }
+        }
+      }
     }
   },
   "components": {

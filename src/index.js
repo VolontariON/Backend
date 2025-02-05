@@ -12,17 +12,17 @@ const mongoConnect = async () => {
   }, 1000);
   await mongoose.connect(process.env.DATABASE_URI);
   clearInterval(intervalId);
-  logger.info(`connected to mongoDB on mongodb://${process.env.DATABASE_URI}`);
+  logger.info("connected to mongoDB on mongodb:${process.env.DATABASE_URI}");
 };
 
 const startServer = () => {
   server = app.listen(PORT, () => {
-    logger.info(`Server is running on http://localhost:${PORT}`); //TODO: SSL cretification
+    logger.info("Server is running on http://localhost:${PORT}"); //TODO: SSL cretification
   });
 };
 try {
   await mongoConnect();
-  logger.info(`connected to mongoDB on mongodb://${process.env.DATABASE_URI}`);
+  logger.info("connected to mongoDB on mongodb://${process.env.DATABASE_URI}");
   startServer();
   mongoose.connection.on("disconnected", async () => {
     logger.error("MongoDB connection lost!");

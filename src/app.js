@@ -26,7 +26,7 @@ app.use(express.json({ limit: "16mb" }));
 app.use(express.urlencoded({ limit: "16mb", extended: true }));
 
 //routes
-app.use("/users", usersRoutes); //volontari e associazioni
+app.use("/users", usersRoutes); //volontari
 app.use("/events", eventsRoutes); //eventi
 app.use("/associazioni", associazioniRoutes);
 app.use("/", UtilsRoutes);

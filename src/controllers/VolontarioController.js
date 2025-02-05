@@ -113,37 +113,6 @@ export const login = async (req, res) => {
   }
 };
 
-export const modifyProfilePicture = async (req, res) => {
-  // TODO: SWAGGER
-  try {
-    const { image } = req.body;
-    const jwtuserid = req.jwtuser._id;
-    const user = await Volontario.findById(jwtuserid);
-    user.profilePicture = image;
-    await user.save();
-    res.status(201).json({ response: "OK" });
-    logger.info("image loaded: " + res.statusCode);
-  } catch (err) {
-    res.status(500).json({ error: "server error" });
-    logger.error(err);
-  }
-};
-
-export const modifyDescription = async (req, res) => {
-  try {
-    const { description } = req.body;
-    //get current user
-    const jwtuserid = req.jwtuser._id;
-    const user = await Volontario.findById(jwtuserid);
-    user.description = description;
-    await user.save();
-    res.status(201).json({ response: "OK" });
-    logger.info("user descriptin modified: " + res.statusCode);
-  } catch (err) {
-    res.status(500).json({ error: "server error" });
-    logger.error(err);
-  }
-};
 
 export const getVolontario = async (req, res) => {
   // *SWAGGER
@@ -160,22 +129,6 @@ export const getVolontario = async (req, res) => {
     });
 };
 
-export const modifySkills = async (req, res) => {
-  try {
-    const { skills } = req.body;
-    //get current user
-    const jwtuserid = req.jwtuser._id;
-    const user = await Volontario.findById(jwtuserid);
-    user.skills = skills;
-    await user.save();
-    res.status(201).json({ response: "OK" });
-    logger.info("user skills modified: " + res.statusCode);
-  } catch (err) {
-    res.status(500).json({ error: "server error" });
-    logger.error(err);
-  }
-};
-
 export const modifyProfile = async (req, res) => {
   try {
     //get current user
@@ -188,19 +141,6 @@ export const modifyProfile = async (req, res) => {
     await user.save();
     res.status(201).json({ response: "OK" });
     logger.info("user profile modified: " + res.statusCode);
-  } catch (err) {
-    res.status(500).json({ error: "server error" });
-    logger.error(err);
-  }
-};
-
-export const getprofilePicture = async (req, res) => {
-  try {
-    //get current user
-    const jwtuserid = req.jwtuser._id;
-    const user = await Volontario.findById(jwtuserid);
-    res.status(201).json(user.profilePicture);
-    logger.info("get profilePicture: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });
     logger.error(err);
@@ -283,13 +223,16 @@ export const seguiAssociazione = async (req, res) => {
     const idAssociazione = req.body.idAssociazione;
     const associazione = await Associazione.findById(idAssociazione).select();
 
-    volontario.followedAssociations.push(idAssociazione);
-    associazione.subscribedVolunteers.push(jwtuserid);
-
-    await volontario.save();
-    await associazione.save();
-
+    if(!volontario.followedAssociations.includes(idAssociazione) && !associazione.subscribedVolunteers.includes(jwtuserid)) {
+      volontario.followedAssociations.push(idAssociazione);
+      associazione.subscribedVolunteers.push(jwtuserid);
+      await volontario.save();
+      await associazione.save();
     res.status(201).json({ response: "ok" });
+    }
+    else{
+    res.status(202).json({ response: "arleady subscribed" });
+    }
     logger.info("seguiAssociazione: " + res.statusCode);
   } catch (err) {
     res.status(500).json({ error: "server error" });

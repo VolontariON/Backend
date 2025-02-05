@@ -20,6 +20,7 @@ export const logout = (req, res) => {
     logger.error(err);
   }
 };
+
 export const sendEmail = (req, res) => {
   registrationEmail("marccs35@gmail.com", "Marco", req, res);
 };

@@ -27,24 +27,13 @@ router.post("/registrazioneVolontario", registrazioneVolontario);
 router.post("/login", login);
 router.post("/changePassword", cookiejwtAuth, changePassword);
 router.get("/getVolontari", cookiejwtAuth, getVolontari);
-//router.get("/getSubAssociazioni", cookiejwtAuth, getSubAssociazioni);
 router.get("/getVolontario", getVolontario);
 router.get("/getAssociazioniIscritte",cookiejwtAuth, getAssociazioniIscritte);
 router.post("/unsubscribeAssociazione",cookiejwtAuth, unsubscribeAssociazione);
 router.post("/seguiAssociazione", cookiejwtAuth, seguiAssociazione);
-
 router.get("/getCurrentVolontario", cookiejwtAuth, getCurrentVolontario);
-router.put(
-  "/modifyProfilePicture",
-  cookiejwtAuth,
-  payloadSize,
-  modifyProfilePicture
-);
-router.put("/modifyDescription", cookiejwtAuth, modifyDescription);
-router.put("/modifySkills", cookiejwtAuth, modifySkills);
 router.post("/modifyProfile", cookiejwtAuth, modifyProfile);
 router.delete("/deleteAccount", cookiejwtAuth, deleteAccount);
 router.get("/logout", cookiejwtAuth, logout);
-router.get("/getProfilePicture", cookiejwtAuth, getprofilePicture);
 
 export default router;

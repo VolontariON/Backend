@@ -1,5 +1,5 @@
 import express from "express";
-import { checkLoggedIn, sendEmail,logout } from "../controllers/UtilsController.js";
+import { checkLoggedIn, sendEmail,logout} from "../controllers/UtilsController.js";
 import { cookiejwtAuth } from "../middleware/cookiejwtAuth.js";
 const router = express.Router();
 

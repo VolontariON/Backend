@@ -156,6 +156,31 @@ export const getAssociazione = async (req, res) => {
       logger.error(err);
     });
 };
+
+export const getEventiAssociazione = async (req, res) => {
+  // *SWAGGER
+  try {
+    logger.info("getEventiAssociazione with status code: " + res.statusCode);
+    const id = req.query.id;
+
+    const associazione = await Associazione.findById(id);
+
+    if (!associazione) {
+      return res.status(404).json({ error: "associazione not found" });
+    }
+
+    const eventi = await Eventi.find({
+      _id: { $in: associazione.createdEvents },
+    });
+
+    res.status(201).json({ eventi });
+    Associazione.findById(id)
+  } catch (err) {
+    res.status(500).json({ error: "server error" });
+    logger.error(err);
+  }
+};
+
 export const changePassword = async (req, res) => {
   // *SWAGGER
   try {
@@ -224,7 +249,7 @@ export const modifyProfile = async (req, res) => {
 //   }
 // };
 
-export const getSubAssociazioni = async (req, res) => {
+/* export const getSubAssociazioni = async (req, res) => {
   // *swagger
   logger.info("getSubAssociazioni with status code: " + res.statusCode);
   try {
@@ -253,6 +278,6 @@ export const getSubAssociazioni = async (req, res) => {
     logger.error(err);
     res.status(500).json({ error: "server error" });
   }
-};
+}; */
 
 //todo: get all associations that current user is subscribed to (current user in jwt req.jwtuser)

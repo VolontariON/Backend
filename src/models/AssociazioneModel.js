@@ -9,7 +9,6 @@ const AssociazioneSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   password: { type: String, required: true },
   description: { type: String, required: false },
-  subscriptionIter: { type: String, required: false },
   objectives: { type: String, required: false },
   profilePicture: { type: String, required: false },
   createdEvents: { type: [String], required: false },

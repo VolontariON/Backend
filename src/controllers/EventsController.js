@@ -69,35 +69,7 @@ export const getEventiAssociazioniIscritte = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
 }
 };
-/* export const getEventiAssociazioniIscritte = async (req, res) => {
-  // *swagger
-  logger.info("unsubscribeEvent with status code: " + res.statusCode);
-  const jwtuserid = req.jwtuser._id;
 
-  const vol = await Volontario.findById(jwtuserid);
-    if (!vol) {
-      return res.status(404).json({ error: "Volontario not found" });
-    }
-    
-    if (!vol.followedAssociations || vol.followedAssociations.length === 0) {
-      return res.status(400).json({ error: "No associations to search for." });
-  }
-
-    const associazioni = await Associazione.find({ '_id': { $in: vol.followedAssociations } })
-    
-
-    const event = await Eventi.findById({ '_id': { $in: associazioni.createdEvents } });
-    if (!event) {
-      return res.status(404).json({ error: "event not found" });
-    }
-
-    try{
-      res.status(201).json(event);
-    }catch(err){
-      res.status(500).json({ error: "server error" });
-      logger.error(err);
-    }
-}; */
 
 export const getMyEventiAssociazione = async (req, res) => {
   // *swagger
@@ -238,7 +210,9 @@ export const deleteEvent = async (req, res) => {
       { $pull: { createdEvents: eventId } } // Remove the eventId from the createdEvents array
     );
 
-    await Eventi.findByIdAndDelete(eventId)
+    await Eventi.findByIdAndDelete(eventId);
+    await Volontario.deleteMany({ subscribedEvents: { $in: eventId } }, function(err) {});
+    await Associazione.deleteMany({ createdEvents: { $in: eventId } }, function(err) {});
 
     res.status(201).json({ response: "ok" });
     logger.info("deleteEvent: " + res.statusCode);

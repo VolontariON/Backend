@@ -96,7 +96,11 @@ export const login = async (req, res) => {
           const token = jwt.sign(userData, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
-          res.cookie("token", token, { httpOnly: true });
+          res.cookie("jwt", token, {
+            httpOnly: true, // Importante per impedire l'accesso ai cookie da JavaScript
+            secure: true, // Se usi HTTPS, questo deve essere `true`
+            sameSite: "None", // Necessario per consentire i cookie cross-origin
+          });
         } catch (err) {
           logger.error(err);
         }
@@ -112,7 +116,6 @@ export const login = async (req, res) => {
     logger.error(err);
   }
 };
-
 
 export const getVolontario = async (req, res) => {
   // *SWAGGER
@@ -223,15 +226,17 @@ export const seguiAssociazione = async (req, res) => {
     const idAssociazione = req.body.idAssociazione;
     const associazione = await Associazione.findById(idAssociazione).select();
 
-    if(!volontario.followedAssociations.includes(idAssociazione) && !associazione.subscribedVolunteers.includes(jwtuserid)) {
+    if (
+      !volontario.followedAssociations.includes(idAssociazione) &&
+      !associazione.subscribedVolunteers.includes(jwtuserid)
+    ) {
       volontario.followedAssociations.push(idAssociazione);
       associazione.subscribedVolunteers.push(jwtuserid);
       await volontario.save();
       await associazione.save();
-    res.status(201).json({ response: "ok" });
-    }
-    else{
-    res.status(202).json({ response: "arleady subscribed" });
+      res.status(201).json({ response: "ok" });
+    } else {
+      res.status(202).json({ response: "arleady subscribed" });
     }
     logger.info("seguiAssociazione: " + res.statusCode);
   } catch (err) {

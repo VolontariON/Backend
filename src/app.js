@@ -21,8 +21,8 @@ app.use(
     origin: [
       "https://volontarionfrontend.onrender.com",
       "http://localhost:5173",
-    ], // Allow frontend.com
-    credentials: true, // Allow cookies/auth headers
+    ],
+    credentials: true,
     allowedHeaders: ["Authorization", "Content-Type"],
   })
 );

@@ -98,7 +98,7 @@ export const login = async (req, res) => {
           });
           res.cookie("jwt", token, {
             httpOnly: true, // Importante per impedire l'accesso ai cookie da JavaScript
-            secure: false, // Se usi HTTPS, questo deve essere `true`
+            secure: true, // Se usi HTTPS, questo deve essere `true`
             sameSite: "None", // Necessario per consentire i cookie cross-origin
           });
         } catch (err) {
@@ -200,7 +200,6 @@ export const changePassword = async (req, res) => {
 };
 
 export const getAssociazioniIscritte = async (req, res) => {
-  // *swagger
   logger.info("getAssociazioniIscritte with status code: " + res.statusCode);
   const jwtuserid = req.jwtuser._id;
 

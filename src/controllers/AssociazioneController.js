@@ -81,8 +81,12 @@ export const login = async (req, res) => {
           const token = jwt.sign(userData, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
-          logger.info("saoidhsaoidsaiodhsa " + token);
-          res.cookie("token", token, { httpOnly: true });
+          logger.info("token: " + token);
+          res.cookie("jwt", token, {
+            httpOnly: true, // Importante per impedire l'accesso ai cookie da JavaScript
+            secure: true, // Se usi HTTPS, questo deve essere `true`
+            sameSite: "None", // Necessario per consentire i cookie cross-origin
+          });
         } catch (err) {
           logger.error(err);
         }
@@ -174,7 +178,7 @@ export const getEventiAssociazione = async (req, res) => {
     });
 
     res.status(201).json({ eventi });
-    Associazione.findById(id)
+    Associazione.findById(id);
   } catch (err) {
     res.status(500).json({ error: "server error" });
     logger.error(err);

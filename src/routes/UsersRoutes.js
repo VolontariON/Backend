@@ -3,11 +3,7 @@ import {
   getVolontari,
   registrazioneVolontario,
   login,
-  modifyProfilePicture,
   getCurrentVolontario,
-  modifyDescription,
-  modifySkills,
-  getprofilePicture,
   deleteAccount,
   changePassword,
   modifyProfile,
@@ -28,8 +24,8 @@ router.post("/login", login);
 router.post("/changePassword", cookiejwtAuth, changePassword);
 router.get("/getVolontari", cookiejwtAuth, getVolontari);
 router.get("/getVolontario", getVolontario);
-router.get("/getAssociazioniIscritte",cookiejwtAuth, getAssociazioniIscritte);
-router.post("/unsubscribeAssociazione",cookiejwtAuth, unsubscribeAssociazione);
+router.get("/getAssociazioniIscritte", cookiejwtAuth, getAssociazioniIscritte);
+router.post("/unsubscribeAssociazione", cookiejwtAuth, unsubscribeAssociazione);
 router.post("/seguiAssociazione", cookiejwtAuth, seguiAssociazione);
 router.get("/getCurrentVolontario", cookiejwtAuth, getCurrentVolontario);
 router.post("/modifyProfile", cookiejwtAuth, modifyProfile);

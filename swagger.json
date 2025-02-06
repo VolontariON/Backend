@@ -7,8 +7,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3001",
-      "description": "Local server"
+      "url": "http://localhost:10000",
+      "description": "render.com Local server"
+    },
+    {
+      "url": "https://volontarion-ingegneria-del-software.onrender.com:8080",
+      "description": "render.com Production server"
     }
   ],
   "paths": {

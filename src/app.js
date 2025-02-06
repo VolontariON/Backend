@@ -16,7 +16,16 @@ const swaggerDocument = JSON.parse(
 );
 
 //allow cors
-app.use(cors({ credentials: true, origin: true }));
+app.use(
+  cors({
+    origin: [
+      "https://volontarionfrontend.onrender.com",
+      "http://localhost:5173",
+    ], // Allow frontend.com
+    credentials: true, // Allow cookies/auth headers
+    allowedHeaders: ["Authorization", "Content-Type"],
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 
 // setup

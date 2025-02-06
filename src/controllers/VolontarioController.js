@@ -98,7 +98,7 @@ export const login = async (req, res) => {
           });
           res.cookie("jwt", token, {
             httpOnly: true, // Importante per impedire l'accesso ai cookie da JavaScript
-            secure: true, // Se usi HTTPS, questo deve essere `true`
+            secure: false, // Se usi HTTPS, questo deve essere `true`
             sameSite: "None", // Necessario per consentire i cookie cross-origin
           });
         } catch (err) {

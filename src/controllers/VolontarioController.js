@@ -96,7 +96,7 @@ export const login = async (req, res) => {
           const token = jwt.sign(userData, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
-          res.cookie("jwt", token, {
+          res.cookie("token", token, {
             httpOnly: true, // Importante per impedire l'accesso ai cookie da JavaScript
             secure: false, // Se usi HTTPS, questo deve essere `true`
             sameSite: "None", // Necessario per consentire i cookie cross-origin

@@ -15,8 +15,12 @@ export const cookiejwtAuth = (req, res, next) => {
     req.jwtuser = user;
     next();
   } catch (err) {
-    res.clearCookie("token");
-    res.status(501).json({ error: "jwtcookie expired" });
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    });
+    res.status(403).json({ error: "jwtcookie expired" });
     logger.error(err);
   }
 };

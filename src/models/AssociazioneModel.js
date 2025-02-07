@@ -6,7 +6,7 @@ const SALT_WORK_FACTOR = 10;
 const AssociazioneSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  phone: { type: String, required: true },
+  phone: { type: String, required: false },
   password: { type: String, required: true },
   description: { type: String, required: false },
   objectives: { type: String, required: false },

@@ -77,8 +77,9 @@ export const login = async (req, res) => {
         delete userData.password;
         delete userData.profilePicture;
         logger.info(userData);
+        var token;
         try {
-          const token = jwt.sign(userData, process.env.JWT_SECRET, {
+          token = jwt.sign(userData, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
           logger.info("token: " + token);
@@ -90,7 +91,7 @@ export const login = async (req, res) => {
         } catch (err) {
           logger.error(err);
         }
-        res.status(201).json({ response: "OK" });
+        res.status(201).json({ response: "OK", token: token });
         logger.info("login with status code: " + res.statusCode);
       } else {
         res.status(606).json({ error: "Wrong password" });

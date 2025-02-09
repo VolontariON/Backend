@@ -18,8 +18,11 @@ const swaggerDocument = JSON.parse(
 //allow cors
 app.use(
   cors({
-    origin: "https://volontarionfrontend.onrender.com",
-    // origin: "http://localhost:5173",
+    // origin: "https://volontarionfrontend.onrender.com",
+    // origin: ["http://localhost:5173", "http://localhost:8080"],
+    origin: (origin, callback) => {
+      callback(null, true); // Accetta qualsiasi origin
+    },
     credentials: true,
     allowedHeaders: ["Authorization", "Content-Type"],
   })

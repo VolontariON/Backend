@@ -1,28 +1,40 @@
-# Volontarion-Ingegneria-del-software
+# .
 
-### Installation
+This template should help get you started developing with Vue 3 in Vite.
 
-```
-git clone git@github.com:MarcoMattiuz/Volontarion-Ingegneria-del-software.git
-```
+## Recommended IDE Setup
 
-```
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vite.dev/config/).
+
+## Project Setup
+
+```sh
 npm install
 ```
 
 ### SET .env file
 
+```sh
+npm run dev
 ```
+
 JWT_SECRET = "your_jwt_secret"
 MAILJET_API_KEY_PUBLIC = "your_mailjet_API_KEY"
 MAILJET_SECRET_KEY = "your_mailjet_SECRET_KEY"
+
 ```
 
 ### run dev server
 
 ```
+
 npm run start (runs with node)
 npm run dev (runs with nodemon)
+
 ```
 
 ### API docs
@@ -51,6 +63,7 @@ npm run dev (runs with nodemon)
 ### Project structure
 
 ```
+
 project-root/
 ├── src/
 │ ├── controllers/
@@ -71,4 +84,7 @@ project-root/
 ├── .gitignore
 ├── package.json
 └── README.md
+
+```
+
 ```

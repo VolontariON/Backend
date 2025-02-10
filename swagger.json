@@ -96,7 +96,7 @@
         }
       }
     },
-    "/users/getAssociazioni": {
+    "/associazioni/getAssociazioni": {
       "get": {
         "summary": "Ottieni tutte le associazioni",
         "description": "Restituisce la lista di tutte le associazioni registrate nel database",
@@ -172,30 +172,103 @@
         }
       }
     },
-    "/associazioni": {
-      "get": {
-        "summary": "Ottieni tutte le associazioni",
-        "description": "Restituisce la lista di tutte le associazioni registrate",
-        "responses": {
-          "200": {
-            "description": "Lista delle associazioni",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Associazione"
+    "/users/login": {
+      "summary": "Endpoint per il login dell'utente",
+      "description": "Questo endpoint consente agli utenti di effettuare il login utilizzando la loro email e password. Se le credenziali sono corrette, viene generato un token JWT e inviato come cookie.",
+      "parameters": [
+        {
+          "name": "req",
+          "in": "body",
+          "required": true,
+          "description": "La richiesta HTTP contenente l'email e la password dell'utente",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "L'email dell'utente"
+              },
+              "password": {
+                "type": "string",
+                "description": "La password dell'utente"
+              }
+            },
+            "required": ["email", "password"]
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "Login effettuato con successo",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "response": {
+                    "type": "string",
+                    "example": "OK"
+                  },
+                  "token": {
+                    "type": "string",
+                    "description": "Il token JWT generato"
                   }
                 }
               }
             }
-          },
-          "500": {
-            "description": "Errore del server"
+          }
+        },
+        "604": {
+          "description": "Email non trovata",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "example": "email not found"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "606": {
+          "description": "Password errata",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "example": "Wrong password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Errore del server",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "example": "server error"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
+
     "/associazioni/login": {
       "post": {
         "summary": "Login di un'associazione",
@@ -239,7 +312,7 @@
     "/associazioni/volontariIscrittiEvento": {
       "get": {
         "summary": "Ottieni volontari iscritti a un evento",
-        "description": "Restituisce la lista dei volontari iscritti a un evento specifico",
+        "description": "Restituisce la lista dei volontari iscritti ad un evento specifico",
         "parameters": [
           {
             "name": "id",
@@ -395,30 +468,6 @@
         }
       }
     },
-    "/associazioni/getSubAssociazioni": {
-      "get": {
-        "summary": "Ottieni le associazioni seguite dal volontario",
-        "description": "Restituisce la lista delle associazioni seguite dal volontario loggato",
-        "responses": {
-          "200": {
-            "description": "Lista delle associazioni seguite",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Associazione"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Errore del server"
-          }
-        }
-      }
-    },
     "/utils/checkLoggedIn": {
       "get": {
         "summary": "Verifica se l'utente è loggato",
@@ -446,34 +495,7 @@
         }
       }
     },
-    "/utils/logout": {
-      "get": {
-        "summary": "Logout utente",
-        "description": "Effettua il logout dell'utente corrente rimuovendo il cookie del token",
-        "responses": {
-          "201": {
-            "description": "Logout effettuato con successo",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "response": {
-                      "type": "string",
-                      "example": "OK"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Errore del server"
-          }
-        }
-      }
-    },
-    "/utils/sendEmail": {
+    "/sendEmail": {
       "post": {
         "summary": "Invia un'email di registrazione",
         "description": "Invia un'email di benvenuto a un nuovo utente",
@@ -510,7 +532,7 @@
       }
     },
 
-    "/events": {
+    "/events/getEventi": {
       "get": {
         "summary": "Ottieni tutti gli eventi",
         "description": "Restituisce la lista di tutti gli eventi disponibili nel database",
@@ -926,12 +948,6 @@
             "type": "string",
             "example": "Associazione dedicata alla protezione ambientale e al volontariato.",
             "description": "Breve descrizione dell'associazione",
-            "required": false
-          },
-          "subscriptionIter": {
-            "type": "string",
-            "example": "Step-by-step guida all'iscrizione",
-            "description": "Descrizione del processo di iscrizione",
             "required": false
           },
           "objectives": {

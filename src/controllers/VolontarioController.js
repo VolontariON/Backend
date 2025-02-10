@@ -67,7 +67,6 @@ export const registrazioneVolontario = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  // TODO: SWAGGER
   logger.info(req.body);
   try {
     const { email, password } = req.body;

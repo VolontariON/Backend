@@ -8,10 +8,10 @@
   "servers": [
     {
       "url": "http://localhost:10000",
-      "description": "render.com Local server"
+      "description": "Local server"
     },
     {
-      "url": "https://volontarion-ingegneria-del-software.onrender.com:8080",
+      "url": "https://volontarion-ingegneria-del-software.onrender.com",
       "description": "render.com Production server"
     }
   ],
@@ -892,13 +892,7 @@
             "required": false
           }
         },
-        "required": [
-          "name",
-          "surname",
-          "age",
-          "email",
-          "password"
-        ]
+        "required": ["name", "surname", "age", "email", "password"]
       },
       "Associazione": {
         "type": "object",
@@ -1008,7 +1002,7 @@
             "description": "Luogo fisico dell'evento",
             "required": true
           },
-        
+
           "description": {
             "type": "string",
             "example": "Un evento per ripulire il parco cittadino e sensibilizzare la popolazione.",
@@ -1025,12 +1019,7 @@
             "required": false
           }
         },
-        "required": [
-          "name",
-          "startDateTime",
-          "endDateTime",
-          "place"
-        ]
+        "required": ["name", "startDateTime", "endDateTime", "place"]
       }
     }
   }

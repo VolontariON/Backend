@@ -2,12 +2,10 @@ import mailjet from "node-mailjet";
 import "dotenv/config";
 import logger from "../utils/logger.js";
 import fs from "fs/promises";
-import { getConfig } from "../utils/globals.js";
 import Associazione from "../models/AssociazioneModel.js";
 import Volontario from "../models/VolontarioModel.js";
 import Eventi from "../models/EventiModel.js";
 import jwt from "jsonwebtoken";
-const config = await getConfig();
 const TEMPLATES_PATH = "src/templates";
 const mailjetClient = mailjet.apiConnect(
   process.env.MAILJET_API_KEY_PUBLIC,

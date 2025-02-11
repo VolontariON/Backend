@@ -30,6 +30,106 @@
         }
       }
     },
+
+    "/users/login": {
+      "post": {
+        "summary": "Endpoint per il login dell'utente",
+        "description": "Questo endpoint consente agli utenti di effettuare il login utilizzando la loro email e password. Se le credenziali sono corrette, viene generato un token JWT e inviato come cookie.",
+        "parameters": [
+          {
+            "name": "req",
+            "in": "body",
+            "required": true,
+            "description": "La richiesta HTTP contenente l'email e la password dell'utente",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "L'email dell'utente"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "La password dell'utente"
+                }
+              },
+              "required": ["email", "password"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Login effettuato con successo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "token": {
+                      "type": "string",
+                      "description": "Il token JWT generato"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "604": {
+            "description": "Email non trovata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "email not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "606": {
+            "description": "Password errata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Wrong password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Errore del server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/users/modifyProfile": {
       "post": {
         "summary": "Modifica il profilo del volontario",
@@ -69,57 +169,6 @@
         }
       }
     },
-    "/users/registrazioneAssociazione": {
-      "post": {
-        "summary": "Registra una nuova associazione",
-        "description": "Permette di registrare una nuova associazione",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Associazione"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Associazione registrata con successo"
-          },
-          "400": {
-            "description": "Errore nei dati forniti"
-          },
-          "500": {
-            "description": "Errore del server"
-          }
-        }
-      }
-    },
-    "/associazioni/getAssociazioni": {
-      "get": {
-        "summary": "Ottieni tutte le associazioni",
-        "description": "Restituisce la lista di tutte le associazioni registrate nel database",
-        "responses": {
-          "201": {
-            "description": "Lista delle associazioni",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Associazione"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "server error"
-          }
-        }
-      }
-    },
     "/users/getSubAssociazioni": {
       "get": {
         "summary": "Ottieni le associazioni seguite dal volontario",
@@ -145,236 +194,104 @@
       }
     },
 
-    "/associazioni/registrazione": {
+    "/users/changePassword": {
       "post": {
-        "summary": "Registra una nuova associazione",
-        "description": "Permette di registrare una nuova associazione",
+        "summary": "Cambia la password",
+        "security": [{ "cookieAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Associazione"
+                "type": "object",
+                "properties": {
+                  "oldPassword": { "type": "string" },
+                  "newPassword": { "type": "string" }
+                },
+                "required": ["oldPassword", "newPassword"]
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Associazione registrata con successo"
+          "200": {
+            "description": "Password cambiata con successo"
           },
           "400": {
-            "description": "Email già registrata"
-          },
-          "500": {
-            "description": "Errore del server"
+            "description": "Errore nella richiesta"
           }
         }
       }
     },
-    "/users/login": {
-      "summary": "Endpoint per il login dell'utente",
-      "description": "Questo endpoint consente agli utenti di effettuare il login utilizzando la loro email e password. Se le credenziali sono corrette, viene generato un token JWT e inviato come cookie.",
-      "parameters": [
-        {
-          "name": "req",
-          "in": "body",
-          "required": true,
-          "description": "La richiesta HTTP contenente l'email e la password dell'utente",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "description": "L'email dell'utente"
-              },
-              "password": {
-                "type": "string",
-                "description": "La password dell'utente"
-              }
-            },
-            "required": ["email", "password"]
+    "/users/getVolontari": {
+      "get": {
+        "summary": "Ottiene tutti i volontari",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista dei volontari"
           }
         }
-      ],
-      "responses": {
-        "201": {
-          "description": "Login effettuato con successo",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "response": {
-                    "type": "string",
-                    "example": "OK"
-                  },
-                  "token": {
-                    "type": "string",
-                    "description": "Il token JWT generato"
-                  }
-                }
-              }
-            }
+      }
+    },
+    "/users/getAssociazioniIscritte": {
+      "get": {
+        "summary": "Ottiene le associazioni iscritte da un volontario",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista delle associazioni iscritte"
           }
-        },
-        "604": {
-          "description": "Email non trovata",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "email not found"
-                  }
-                }
-              }
-            }
+        }
+      }
+    },
+    "/users/unsubscribeAssociazione": {
+      "post": {
+        "summary": "Disiscrive un volontario da un'associazione",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Disiscrizione avvenuta con successo"
           }
-        },
-        "606": {
-          "description": "Password errata",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Wrong password"
-                  }
-                }
-              }
-            }
+        }
+      }
+    },
+    "/users/seguiAssociazione": {
+      "post": {
+        "summary": "Segue un'associazione",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ora segui l'associazione"
           }
-        },
-        "500": {
-          "description": "Errore del server",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "server error"
-                  }
-                }
-              }
-            }
+        }
+      }
+    },
+    "/users/getCurrentVolontario": {
+      "get": {
+        "summary": "Ottiene il volontario attualmente loggato",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Dati del volontario attuale"
           }
         }
       }
     },
 
-    "/associazioni/login": {
-      "post": {
-        "summary": "Login di un'associazione",
-        "description": "Permette di autenticare un'associazione tramite email e password",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "info@volontaritn.it"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "password123"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Login effettuato con successo"
-          },
-          "404": {
-            "description": "Email non trovata"
-          },
-          "401": {
-            "description": "Password errata"
-          },
-          "500": {
-            "description": "Errore del server"
-          }
-        }
-      }
-    },
-    "/associazioni/volontariIscrittiEvento": {
+    "/associazioni/getAll": {
       "get": {
-        "summary": "Ottieni volontari iscritti a un evento",
-        "description": "Restituisce la lista dei volontari iscritti ad un evento specifico",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "ID dell'evento"
-          }
-        ],
+        "summary": "Ottiene tutte le associazioni",
         "responses": {
           "200": {
-            "description": "Lista dei volontari iscritti",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Volontario"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Evento non trovato"
-          },
-          "403": {
-            "description": "Non autorizzato"
-          },
-          "500": {
-            "description": "Errore del server"
+            "description": "Lista di tutte le associazioni"
           }
         }
       }
     },
-    "/associazioni/me": {
+    "/associazioni/getById/{id}": {
       "get": {
-        "summary": "Ottieni i dati dell'associazione corrente",
-        "description": "Restituisce i dati dell'associazione autenticata",
-        "responses": {
-          "200": {
-            "description": "Dati dell'associazione",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Associazione"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Errore del server"
-          }
-        }
-      }
-    },
-    "/associazioni/{id}": {
-      "get": {
-        "summary": "Ottieni un'associazione",
-        "description": "Restituisce i dati di un'associazione specifica",
+        "summary": "Ottiene una specifica associazione",
         "parameters": [
           {
             "name": "id",
@@ -382,34 +299,23 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "ID dell'associazione"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Dati dell'associazione",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Associazione"
-                }
-              }
-            }
+            "description": "Dati dell'associazione richiesta"
           },
           "404": {
             "description": "Associazione non trovata"
-          },
-          "500": {
-            "description": "Errore del server"
           }
         }
       }
     },
-    "/associazioni/changePassword": {
-      "put": {
-        "summary": "Modifica la password dell'associazione",
-        "description": "Permette di cambiare la password dell'associazione autenticata",
+    "/associazioni/create": {
+      "post": {
+        "summary": "Crea una nuova associazione",
+        "security": [{ "cookieAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -417,58 +323,155 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "password": {
-                    "type": "string",
-                    "example": "passwordAttuale"
-                  },
-                  "newPassword": {
-                    "type": "string",
-                    "example": "nuovaPassword123"
-                  }
-                }
+                  "nome": { "type": "string" },
+                  "descrizione": { "type": "string" },
+                  "sede": { "type": "string" },
+                  "contatto": { "type": "string" }
+                },
+                "required": ["nome", "descrizione"]
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Password cambiata con successo"
-          },
-          "401": {
-            "description": "Password attuale errata"
-          },
-          "500": {
-            "description": "Errore del server"
+            "description": "Associazione creata con successo"
           }
         }
       }
     },
-    "/associazioni/modifyProfile": {
+    "/associazioni/update/{id}": {
       "put": {
-        "summary": "Modifica il profilo dell'associazione",
-        "description": "Permette di aggiornare i dati del profilo dell'associazione autenticata",
+        "summary": "Modifica un'associazione esistente",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": true
+                "properties": {
+                  "nome": { "type": "string" },
+                  "descrizione": { "type": "string" },
+                  "sede": { "type": "string" },
+                  "contatto": { "type": "string" }
+                }
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Profilo modificato con successo"
-          },
-          "500": {
-            "description": "Errore del server"
+          "200": {
+            "description": "Associazione aggiornata con successo"
           }
         }
       }
     },
-    "/utils/checkLoggedIn": {
+    "/associazioni/delete/{id}": {
+      "delete": {
+        "summary": "Elimina un'associazione",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Associazione eliminata con successo"
+          }
+        }
+      }
+    },
+    "/associazioni/getMembri/{id}": {
+      "get": {
+        "summary": "Ottiene i membri di un'associazione",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista dei membri dell'associazione"
+          }
+        }
+      }
+    },
+    "/associazioni/addMembro": {
+      "post": {
+        "summary": "Aggiunge un volontario a un'associazione",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "associazioneId": { "type": "string" },
+                  "volontarioId": { "type": "string" }
+                },
+                "required": ["associazioneId", "volontarioId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Volontario aggiunto con successo"
+          }
+        }
+      }
+    },
+    "/associazioni/removeMembro": {
+      "post": {
+        "summary": "Rimuove un volontario da un'associazione",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "associazioneId": { "type": "string" },
+                  "volontarioId": { "type": "string" }
+                },
+                "required": ["associazioneId", "volontarioId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Volontario rimosso con successo"
+          }
+        }
+      }
+    },
+    "/checkLoggedIn": {
       "get": {
         "summary": "Verifica se l'utente è loggato",
         "description": "Ritorna una risposta di successo se l'utente è autenticato",
